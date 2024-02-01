@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+
+  nest-api:
+    container_name: nest_api
+    build:
+      context: .
+    environment:
+      - NODE_ENV=production
+      - PORT=${PORT}
+      - ISSUER_BASE_URL=${ISSUER_BASE_URL}
+      - AUDIENCE=${AUDIENCE}
+      - AUTH0_ISSUER_BASE_URL=${AUTH0_ISSUER_BASE_URL}
+      - TOKEN_ALG=${TOKEN_ALG}
+      - DB_HOST=db
+      - DB_PORT=${DB_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    container_name: db
+    image: postgres:15-alpine3.18
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - PGPORT=${DB_PORT}
+    expose:
+      - ${DB_PORT}:${DB_PORT}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  
+volumes:
+  db-data: {}

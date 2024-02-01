@@ -10,8 +10,8 @@ import { PermissionsGuard } from 'src/authorization/permissions.guard';
 export class BrandController {
   constructor(private readonly brandService: BrandService) {}
 
-  @UseGuards(PermissionsGuard)
-  @SetMetadata('permissions', ['pepe'])
+  //@UseGuards(PermissionsGuard)
+  //@SetMetadata('permissions', ['pepe'])
   @Post()
   create(@Body() createBrandDto: CreateBrandDto) {
     return this.brandService.create(createBrandDto);
