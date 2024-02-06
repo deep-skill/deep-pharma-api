@@ -1,26 +1,79 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreatePresentationDto } from './dto/create-presentation.dto';
 import { UpdatePresentationDto } from './dto/update-presentation.dto';
+import { Presentation } from './entities/presentation.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class PresentationService {
-  create(createPresentationDto: CreatePresentationDto) {
-    return 'This action adds a new presentation';
+  
+  constructor(
+    @InjectRepository( Presentation )
+    private readonly presentationRepository: Repository<Presentation>
+  ) {}
+  async create(createPresentationDto: CreatePresentationDto) {
+    try {
+      const presentation = this.presentationRepository.create( createPresentationDto );
+
+      await this.presentationRepository.save( presentation );
+      return presentation;
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException('Error creating presentation')
+    }
+
+
   }
 
-  findAll() {
-    return `This action returns all presentation`;
+  async findAll() {
+    try {
+      const presentations = await this.presentationRepository.find();
+      return presentations;
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException('Error Get all presentation')
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} presentation`;
+  async findOne(id: number) {
+    try {
+      const presentation = await this.presentationRepository.findOne({ where: { id } });
+      if (!presentation) {
+        throw new NotFoundException(`Error Get presentations by id ${id}`)
+      }
+      return presentation;
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException('Error Get presentation')
+    }
   }
 
-  update(id: number, updatePresentationDto: UpdatePresentationDto) {
-    return `This action updates a #${id} presentation`;
+  async update(id: number, updatePresentationDto: UpdatePresentationDto) {
+    try {
+      const drug = await this.presentationRepository.findOne({ where: { id } });
+      if (!drug) {
+        throw new NotFoundException(`Error Get presentations by id ${id}`)
+      }
+      await this.presentationRepository.update(id, updatePresentationDto);
+      return true;
+    } catch (error) {
+      console.log(error)
+      throw new NotFoundException(`Error Get presentations by id ${id}`)
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} presentation`;
+  async remove(id: number) {
+    try {
+      const presentation = await this.presentationRepository.findOne({ where: { id } });
+      if (!presentation) {
+        throw new NotFoundException(`Error Get presentations by id ${id}`)
+      }
+      await this.presentationRepository.delete(id);
+      return true;
+    } catch (error) {
+      console.log(error)
+      throw new NotFoundException(`Error Get presentations by id ${id}`)
+    }
   }
 }
