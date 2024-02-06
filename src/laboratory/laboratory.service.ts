@@ -1,26 +1,85 @@
-import { Injectable } from '@nestjs/common';
-import { CreateLaboratoryDto } from './dto/create-laboratory.dto';
-import { UpdateLaboratoryDto } from './dto/update-laboratory.dto';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from "@nestjs/common";
+import { CreateLaboratoryDto } from "./dto/create-laboratory.dto";
+import { UpdateLaboratoryDto } from "./dto/update-laboratory.dto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Laboratory } from "./entities/laboratory.entity";
+import { Repository } from "typeorm";
 
 @Injectable()
 export class LaboratoryService {
-  create(createLaboratoryDto: CreateLaboratoryDto) {
-    return 'This action adds a new laboratory';
+  constructor(
+    @InjectRepository(Laboratory)
+    private readonly laboratoryRepository: Repository<Laboratory>
+  ) {}
+  async create(createLaboratoryDto: CreateLaboratoryDto) {
+    try {
+      const laboratory = this.laboratoryRepository.create(createLaboratoryDto);
+      await this.laboratoryRepository.save(laboratory);
+      return laboratory;
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException("Error creating laboratory");
+    }
   }
 
-  findAll() {
-    return `This action returns all laboratory`;
+  async findAll() {
+    try {
+      const laboratories = await this.laboratoryRepository.find();
+      return laboratories;
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException("Error Get all  laboratories");
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} laboratory`;
+  async findOne(id: number) {
+    try {
+      const laboratory = await this.laboratoryRepository.findOne({
+        where: { id },
+      });
+      if (!laboratory) {
+        throw new NotFoundException(`Error Get laboratory by id ${id}`);
+      }
+      return laboratory;
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException("Error getting laboratory by id");
+    }
   }
 
-  update(id: number, updateLaboratoryDto: UpdateLaboratoryDto) {
-    return `This action updates a #${id} laboratory`;
+  async update(id: number, updateLaboratoryDto: UpdateLaboratoryDto) {
+    try {
+      const laboratory = await this.laboratoryRepository.findOne({
+        where: { id },
+      });
+      if (!laboratory) {
+        throw new NotFoundException(`Error update laboratory by id ${id}`);
+      }
+      await this.laboratoryRepository.update(id, updateLaboratoryDto);
+      return true;
+    } catch (error) {
+      console.log(error);
+      throw new NotFoundException(`Error update laboratory by id ${id}`);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} laboratory`;
+  async remove(id: number) {
+    try {
+      const laboratory = await this.laboratoryRepository.findOne({
+        where: { id },
+      });
+      if (!laboratory) {
+        throw new NotFoundException(`Error remove laboratory by id ${id}`);
+      }
+      await this.laboratoryRepository.delete(id);
+      return true;
+    } catch (error) {
+      console.log(error);
+      throw new NotFoundException(`Error remove laboratory by id ${id}`);
+    }
   }
 }
