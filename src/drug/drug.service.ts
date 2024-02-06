@@ -1,26 +1,76 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateDrugDto } from './dto/create-drug.dto';
 import { UpdateDrugDto } from './dto/update-drug.dto';
+import { Drug } from './entities/drug.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class DrugService {
-  create(createDrugDto: CreateDrugDto) {
-    return 'This action adds a new drug';
+
+  constructor(
+    @InjectRepository( Drug )
+    private readonly drugRepository: Repository<Drug>
+  ) {}
+  async create(createDrugDto: CreateDrugDto) {
+    try {
+      const drug = this.drugRepository.create( createDrugDto );
+      await this.drugRepository.save( drug );
+      return drug;
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException('Error creating brand')
+    }
   }
 
-  findAll() {
-    return `This action returns all drug`;
+  async findAll() {
+    try {
+      const drugs = await this.drugRepository.find();
+      return drugs;
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException('Error Get all  drugs')
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} drug`;
+  async findOne(id: number) {
+    try {
+      const drug = await this.drugRepository.findOne({ where: { id } });
+      if (!drug) {
+        throw new NotFoundException(`Error Get drugs by id ${id}`)
+      }
+      return drug;
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException('Error creating brand')
+    }
   }
 
-  update(id: number, updateDrugDto: UpdateDrugDto) {
-    return `This action updates a #${id} drug`;
+  async update(id: number, updateDrugDto: UpdateDrugDto) {
+    try {
+      const drug = await this.drugRepository.findOne({ where: { id } });
+      if (!drug) {
+        throw new NotFoundException(`Error Get drugs by id ${id}`)
+      }
+      await this.drugRepository.update(id, updateDrugDto);
+      return true;
+    } catch (error) {
+      console.log(error)
+      throw new NotFoundException(`Error Get drugs by id ${id}`)
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} drug`;
+  async remove(id: number) {
+    try {
+      const drug = await this.drugRepository.findOne({ where: { id } });
+      if (!drug) {
+        throw new NotFoundException(`Error Get drugs by id ${id}`)
+      }
+      await this.drugRepository.delete(id);
+      return true;
+    } catch (error) {
+      console.log(error)
+      throw new NotFoundException(`Error Get drugs by id ${id}`)
+    }
   }
 }
