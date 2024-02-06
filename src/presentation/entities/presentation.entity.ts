@@ -8,6 +8,6 @@ export class Presentation {
     @Column()
     name: string;
 
-    @Column()
+    @Column({ nullable: true})
     factor: number;
 }
