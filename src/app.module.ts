@@ -4,6 +4,17 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BrandModule } from './brand/brand.module';
+import { DrugModule } from './drug/drug.module';
+import { PresentationModule } from './presentation/presentation.module';
+import { LaboratoryModule } from './laboratory/laboratory.module';
+import { ProductModule } from './product/product.module';
+import { LotModule } from './lot/lot.module';
+import { SupplierModule } from './supplier/supplier.module';
+import { SaleLotModule } from './sale_lot/sale_lot.module';
+import { SaleModule } from './sale/sale.module';
+import { CustomerModule } from './customer/customer.module';
+import { UserModule } from './user/user.module';
+import { RoleModule } from './role/role.module';
 
 @Module({
   imports: [
@@ -18,7 +29,18 @@ import { BrandModule } from './brand/brand.module';
       autoLoadEntities: true,
       synchronize: true
     }),
-    BrandModule
+    BrandModule,
+    DrugModule,
+    PresentationModule,
+    LaboratoryModule,
+    ProductModule,
+    LotModule,
+    SupplierModule,
+    SaleLotModule,
+    SaleModule,
+    CustomerModule,
+    UserModule,
+    RoleModule
   ],
   controllers: [AppController],
   providers: [AppService],
