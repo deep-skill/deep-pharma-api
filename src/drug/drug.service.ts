@@ -10,13 +10,13 @@ export class DrugService {
 
   constructor(
     @InjectRepository( Drug )
-    private readonly drogRepository: Repository<Drug>
+    private readonly drugRepository: Repository<Drug>
   ) {}
   async create(createDrugDto: CreateDrugDto) {
     try {
-      const brand = this.drogRepository.create( createDrugDto );
-      await this.drogRepository.save( brand );
-      return brand;
+      const drug = this.drugRepository.create( createDrugDto );
+      await this.drugRepository.save( drug );
+      return drug;
     } catch (error) {
       console.log(error)
       throw new InternalServerErrorException('Error creating brand')
@@ -25,8 +25,8 @@ export class DrugService {
 
   async findAll() {
     try {
-      const brands = await this.drogRepository.find();
-      return brands;
+      const drugs = await this.drugRepository.find();
+      return drugs;
     } catch (error) {
       console.log(error)
       throw new InternalServerErrorException('Error Get all  drugs')
@@ -35,11 +35,11 @@ export class DrugService {
 
   async findOne(id: number) {
     try {
-      const brand = await this.drogRepository.findOne({ where: { id } });
-      if (!brand) {
+      const drug = await this.drugRepository.findOne({ where: { id } });
+      if (!drug) {
         throw new NotFoundException(`Error Get drugs by id ${id}`)
       }
-      return brand;
+      return drug;
     } catch (error) {
       console.log(error)
       throw new InternalServerErrorException('Error creating brand')
@@ -48,11 +48,11 @@ export class DrugService {
 
   async update(id: number, updateDrugDto: UpdateDrugDto) {
     try {
-      const brand = await this.drogRepository.findOne({ where: { id } });
-      if (!brand) {
+      const drug = await this.drugRepository.findOne({ where: { id } });
+      if (!drug) {
         throw new NotFoundException(`Error Get drugs by id ${id}`)
       }
-      await this.drogRepository.update(id, updateDrugDto);
+      await this.drugRepository.update(id, updateDrugDto);
       return true;
     } catch (error) {
       console.log(error)
@@ -62,11 +62,11 @@ export class DrugService {
 
   async remove(id: number) {
     try {
-      const brand = await this.drogRepository.findOne({ where: { id } });
-      if (!brand) {
+      const drug = await this.drugRepository.findOne({ where: { id } });
+      if (!drug) {
         throw new NotFoundException(`Error Get drugs by id ${id}`)
       }
-      await this.drogRepository.delete(id);
+      await this.drugRepository.delete(id);
       return true;
     } catch (error) {
       console.log(error)
