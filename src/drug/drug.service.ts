@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateDrugDto } from './dto/create-drug.dto';
 import { UpdateDrugDto } from './dto/update-drug.dto';
 import { Drug } from './entities/drug.entity';
@@ -23,19 +23,54 @@ export class DrugService {
     }
   }
 
-  findAll() {
-    return `This action returns all drug`;
+  async findAll() {
+    try {
+      const brands = await this.drogRepository.find();
+      return brands;
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException('Error Get all  drugs')
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} drug`;
+  async findOne(id: number) {
+    try {
+      const brand = await this.drogRepository.findOne({ where: { id } });
+      if (!brand) {
+        throw new NotFoundException(`Error Get drugs by id ${id}`)
+      }
+      return brand;
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException('Error creating brand')
+    }
   }
 
-  update(id: number, updateDrugDto: UpdateDrugDto) {
-    return `This action updates a #${id} drug`;
+  async update(id: number, updateDrugDto: UpdateDrugDto) {
+    try {
+      const brand = await this.drogRepository.findOne({ where: { id } });
+      if (!brand) {
+        throw new NotFoundException(`Error Get drugs by id ${id}`)
+      }
+      await this.drogRepository.update(id, updateDrugDto);
+      return true;
+    } catch (error) {
+      console.log(error)
+      throw new NotFoundException(`Error Get drugs by id ${id}`)
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} drug`;
+  async remove(id: number) {
+    try {
+      const brand = await this.drogRepository.findOne({ where: { id } });
+      if (!brand) {
+        throw new NotFoundException(`Error Get drugs by id ${id}`)
+      }
+      await this.drogRepository.delete(id);
+      return true;
+    } catch (error) {
+      console.log(error)
+      throw new NotFoundException(`Error Get drugs by id ${id}`)
+    }
   }
 }
