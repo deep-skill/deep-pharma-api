@@ -5,12 +5,13 @@ import { Product } from './entities/product.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DrugModule } from 'src/drug/drug.module';
 import { Drug } from 'src/drug/entities/drug.entity';
+import { Laboratory } from 'src/laboratory/entities/laboratory.entity';
 
 @Module({
   controllers: [ProductController],
   providers: [ProductService, ],
   imports: [
-    TypeOrmModule.forFeature([ Product , Drug]),
+    TypeOrmModule.forFeature([ Product , Drug, Laboratory]),
   ],
   exports: [
     ProductService,

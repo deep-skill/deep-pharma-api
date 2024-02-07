@@ -1,4 +1,4 @@
-import { IsBoolean, IsNumber, IsString } from "class-validator";
+import { IsBoolean, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateProductDto {
     @IsString()
@@ -23,5 +23,10 @@ export class CreateProductDto {
     is_fractionable: boolean
 
     @IsNumber()
+    @IsOptional()
     drugId: number
+
+    @IsNumber()
+    @IsOptional()
+    laboratoryId: number
 }

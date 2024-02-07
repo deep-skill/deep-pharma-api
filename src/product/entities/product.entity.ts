@@ -1,5 +1,6 @@
 import { Drug } from "src/drug/entities/drug.entity";
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Laboratory } from "src/laboratory/entities/laboratory.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Product {
@@ -28,5 +29,8 @@ export class Product {
     is_fractionable: boolean;
 
     @ManyToOne(() => Drug , drug => drug.products)
-    drug: Drug
+    drug?: Drug
+
+    @ManyToOne(() => Laboratory , laboratory => laboratory.products)
+    laboratory?: Laboratory
 }
