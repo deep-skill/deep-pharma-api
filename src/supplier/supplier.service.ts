@@ -32,7 +32,7 @@ export class SupplierService {
       return suppliers;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException("Error Get all  drugs");
+      throw new InternalServerErrorException("Error Get all drugs");
     }
   }
 
@@ -40,7 +40,7 @@ export class SupplierService {
     try {
       const supplier = await this.supplierRepository.findOne({ where: { id } });
       if (!supplier) {
-        throw new NotFoundException(`Error Get suppliers by id ${id}`);
+        throw new NotFoundException(`Error Get supplier by id ${id}`);
       }
       return supplier;
     } catch (error) {

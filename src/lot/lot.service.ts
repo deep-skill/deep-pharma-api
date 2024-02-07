@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateLotDto } from './dto/create-lot.dto';
 import { UpdateLotDto } from './dto/update-lot.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -30,25 +30,58 @@ export class LotService {
     }
   }
 
-  findAll() {
-    return this.lotRepository.find(
-      {
+  async findAll() {
+    try {
+      const lots = await this.lotRepository.find({
         relations: {
           supplier: true
         }
+      });
+      return lots;
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException("Error Get all lots");
+    }
+  }
+
+  async findOne(id: number) {
+    try {
+      const lot = await this.lotRepository.findOne({ where: { id } });
+      if (!lot) {
+        throw new NotFoundException(`Error Get lot by id ${id}`);
       }
-    );
+      return lot;
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException("Error getting lot");
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} lot`;
+  async update(id: number, updateLotDto: UpdateLotDto) {
+    try {
+      const lot = await this.lotRepository.findOne({ where: { id } });
+      if (!lot) {
+        throw new NotFoundException(`Error update lot by id ${id}`);
+      }
+      await this.lotRepository.update(id, updateLotDto);
+      return true;
+    } catch (error) {
+      console.log(error);
+      throw new NotFoundException(`Error update lot by id ${id}`);
+    }
   }
 
-  update(id: number, updateLotDto: UpdateLotDto) {
-    return `This action updates a #${id} lot`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} lot`;
+  async remove(id: number) {
+    try {
+      const lot = await this.lotRepository.findOne({ where: { id } });
+      if (!lot) {
+        throw new NotFoundException(`Error remove lot by id ${id}`);
+      }
+      await this.lotRepository.delete(id);
+      return true;
+    } catch (error) {
+      console.log(error);
+      throw new NotFoundException(`Error remove lot by id ${id}`);
+    }
   }
 }
