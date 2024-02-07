@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -23,19 +23,54 @@ export class BrandService {
     }
   }
 
-  findAll() {
-    return `This action returns all brand`;
+  async findAll() {
+    try {
+      const brands = await this.brandRepository.find();
+      return brands;
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException('Error Get all brand')
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} brand`;
+  async findOne(id: number) {
+    try {
+      const brand = await this.brandRepository.findOne({ where: { id } });
+      if (!brand) {
+        throw new NotFoundException(`Error Get brands by id ${id}`)
+      }
+      return brand;
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException('Error Get brand')
+    }
   }
 
-  update(id: number, updateBrandDto: UpdateBrandDto) {
-    return `This action updates a #${id} brand`;
+  async update(id: number, updateBrandDto: UpdateBrandDto) {
+    try {
+      const brand = await this.brandRepository.findOne({ where: { id } });
+      if (!brand) {
+        throw new NotFoundException(`Error Get brands by id ${id}`)
+      }
+      await this.brandRepository.update(id, updateBrandDto);
+      return true;
+    } catch (error) {
+      console.log(error)
+      throw new NotFoundException(`Error Get brands by id ${id}`)
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} brand`;
+  async remove(id: number) {
+    try {
+      const brand = await this.brandRepository.findOne({ where: { id } });
+      if (!brand) {
+        throw new NotFoundException(`Error Get brands by id ${id}`)
+      }
+      await this.brandRepository.delete(id);
+      return true;
+    } catch (error) {
+      console.log(error)
+      throw new NotFoundException(`Error Get brands by id ${id}`)
+    }
   }
 }

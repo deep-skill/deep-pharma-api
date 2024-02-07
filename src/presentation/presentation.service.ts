@@ -51,8 +51,8 @@ export class PresentationService {
 
   async update(id: number, updatePresentationDto: UpdatePresentationDto) {
     try {
-      const drug = await this.presentationRepository.findOne({ where: { id } });
-      if (!drug) {
+      const presentation = await this.presentationRepository.findOne({ where: { id } });
+      if (!presentation) {
         throw new NotFoundException(`Error Get presentations by id ${id}`)
       }
       await this.presentationRepository.update(id, updatePresentationDto);
