@@ -7,6 +7,7 @@ import { Supplier } from "./entities/supplier.entity";
 @Module({
   controllers: [SupplierController],
   providers: [SupplierService],
-  imports: [TypeOrmModule.forFeature([Supplier])],
+  imports: [
+    TypeOrmModule.forFeature([Supplier])],
 })
-export class SupplierModule {}
+export class SupplierModule { }

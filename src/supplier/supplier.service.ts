@@ -22,7 +22,7 @@ export class SupplierService {
       return supplier;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException("Error creating brand");
+      throw new InternalServerErrorException("Error creating supplier");
     }
   }
 

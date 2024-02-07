@@ -6,7 +6,7 @@ export class CreateSupplierDto {
   @IsString()
   address: string;
   @IsNumber()
-  phone: number;
+  phone_number: number;
   @IsString()
   email: string;
 }
