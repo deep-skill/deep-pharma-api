@@ -25,7 +25,11 @@ export class DrugService {
 
   async findAll() {
     try {
-      const drugs = await this.drugRepository.find();
+      const drugs = await this.drugRepository.find({
+        relations: {
+          products: true
+        }
+      });
       return drugs;
     } catch (error) {
       console.log(error)

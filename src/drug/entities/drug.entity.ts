@@ -1,13 +1,17 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Product } from "src/product/entities/product.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Drug {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column()
+    @Column('text')
     name: string;
 
-    @Column()
+    @Column('text')
     therapeutic_function: string;
+
+    @OneToMany(() => Product, product => product.drug)
+    products: Product[]
 }
