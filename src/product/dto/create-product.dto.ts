@@ -29,4 +29,12 @@ export class CreateProductDto {
     @IsNumber()
     @IsOptional()
     laboratoryId: number
+
+    @IsNumber()
+    @IsOptional()
+    presentationId: number
+
+    @IsNumber()
+    @IsOptional()
+    brandId: number
 }

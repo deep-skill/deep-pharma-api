@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Drug } from 'src/drug/entities/drug.entity';
 import { Laboratory } from 'src/laboratory/entities/laboratory.entity';
+import { Presentation } from 'src/presentation/entities/presentation.entity';
 
 @Injectable()
 export class ProductService {
@@ -19,6 +20,12 @@ export class ProductService {
 
     @InjectRepository( Laboratory )
     private readonly lavoratoryRepository: Repository<Laboratory>,
+
+    @InjectRepository( Presentation )
+    private readonly presentationRepository: Repository<Presentation>,
+
+    @InjectRepository( Drug )
+    private readonly DrugRepository: Repository<Drug>,
   ) {}
   async create(createProductDto: CreateProductDto) {
     try {
@@ -29,7 +36,15 @@ export class ProductService {
 
       product.laboratory = await this.lavoratoryRepository.findOneBy({
         id: createProductDto.laboratoryId
-      }) 
+      })
+      
+      product.presentation = await this.presentationRepository.findOneBy({
+        id: createProductDto.presentationId
+      })
+
+      product.brand = await this.DrugRepository.findOneBy({
+        id: createProductDto.brandId
+      })
 
       await this.productRepository.save(product);
       return product;
@@ -46,7 +61,9 @@ export class ProductService {
       {
         relations: {
           drug: true,
-          laboratory: true
+          laboratory: true,
+          presentation: true,
+          brand: true
         }
       }
     );

@@ -2,10 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, SetMetada
 import { BrandService } from './brand.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
-import { AuthorizationGuard } from 'src/authorization/authorization.guard';
-import { PermissionsGuard } from 'src/authorization/permissions.guard';
+//import { AuthorizationGuard } from 'src/authorization/authorization.guard';
+//import { PermissionsGuard } from 'src/authorization/permissions.guard';
 
-@UseGuards(AuthorizationGuard)
+//@UseGuards(AuthorizationGuard)
 @Controller('brand')
 export class BrandController {
   constructor(private readonly brandService: BrandService) {}
