@@ -10,5 +10,6 @@ import { Drug } from './entities/drug.entity';
   imports: [
     TypeOrmModule.forFeature([ Drug ]),
   ],
+
 })
 export class DrugModule {}
