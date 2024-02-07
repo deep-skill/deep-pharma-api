@@ -9,4 +9,6 @@ export class CreateUserDto {
   dni: number;
   @IsString()
   password: string;
+  @IsNumber()
+  roleId: number;
 }
