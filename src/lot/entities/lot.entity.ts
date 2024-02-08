@@ -1,3 +1,4 @@
+import { Product } from "src/product/entities/product.entity";
 import { Supplier } from "src/supplier/entities/supplier.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
@@ -20,4 +21,7 @@ export class Lot {
 
     @ManyToOne(() => Supplier, (supplier) => supplier.lots)
     supplier: Supplier
+
+    @ManyToOne(() => Product, (product) => product.lots)
+    product: Product
 }

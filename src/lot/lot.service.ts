@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Lot } from './entities/lot.entity';
 import { Supplier } from 'src/supplier/entities/supplier.entity';
+import { Product } from 'src/product/entities/product.entity';
 
 @Injectable()
 export class LotService {
@@ -12,21 +13,35 @@ export class LotService {
     @InjectRepository(Lot)
     private readonly lotRepository: Repository<Lot>,
     @InjectRepository(Supplier)
-    private readonly supplierRepository: Repository<Supplier>
+    private readonly supplierRepository: Repository<Supplier>,
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>
+
   ) { }
 
   async create(createLotDto: CreateLotDto) {
     try {
       const lot = this.lotRepository.create(createLotDto);
-      lot.supplier = await this.supplierRepository.findOneBy({
+      
+      const supplier = await this.supplierRepository.findOneBy({
         id: createLotDto.supplierId
       })
+
+      const product = await this.productRepository.findOneBy({
+        id: createLotDto.productId
+      })
+
+      if(!supplier || !product){
+        throw new NotFoundException("Error creating lot. None of these entities were found, supplier and product")
+      }
+      lot.supplier = supplier
+      lot.product = product
 
       await this.lotRepository.save(lot);
       return lot;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException("Error creating brand");
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -34,7 +49,8 @@ export class LotService {
     try {
       const lots = await this.lotRepository.find({
         relations: {
-          supplier: true
+          supplier: true,
+          product: true
         }
       });
       return lots;
@@ -46,7 +62,13 @@ export class LotService {
 
   async findOne(id: number) {
     try {
-      const lot = await this.lotRepository.findOne({ where: { id } });
+      const lot = await this.lotRepository.findOne({ 
+        where: { id },
+        relations: {
+          supplier: true,
+          product: true
+        }
+      });
       if (!lot) {
         throw new NotFoundException(`Error Get lot by id ${id}`);
       }
@@ -63,8 +85,25 @@ export class LotService {
       if (!lot) {
         throw new NotFoundException(`Error update lot by id ${id}`);
       }
-      await this.lotRepository.update(id, updateLotDto);
-      return true;
+      const supplier = await this.supplierRepository.findOneBy({
+        id: updateLotDto.supplierId
+      })
+
+      const product = await this.productRepository.findOneBy({
+        id: updateLotDto.productId
+      })
+
+      if(!supplier || !product){
+        throw new NotFoundException("Error creating lot. None of these entities were found, supplier and product")
+      }
+      lot.supplier = supplier
+      lot.product = product
+      lot.initial_stock = updateLotDto.initial_stock
+      lot.updated_stock = updateLotDto.updated_stock
+      lot.expiration = updateLotDto.expiration
+      lot.lot_state = updateLotDto.lot_state
+
+      return await this.lotRepository.save(lot);
     } catch (error) {
       console.log(error);
       throw new NotFoundException(`Error update lot by id ${id}`);
