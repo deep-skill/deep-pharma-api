@@ -32,19 +32,15 @@ export class ProductService {
       const product = this.productRepository.create(createProductDto);
 
       if(product.is_medicine){
-
         if(!createProductDto.drugId || !createProductDto.laboratoryId || !createProductDto.presentationId){
           throw new NotFoundException("Error creating Product. presentation, laboratory and drug cannot be null")
         }
-
         const drug = await this.drugRepository.findOneBy({
           id: createProductDto.drugId
         })
-  
         const laboratory = await this.lavoratoryRepository.findOneBy({
           id: createProductDto.laboratoryId
         })
-        
         const presentation = await this.presentationRepository.findOneBy({
           id: createProductDto.presentationId
         })
@@ -54,15 +50,14 @@ export class ProductService {
         product.presentation = presentation
         product.laboratory = laboratory
         product.drug = drug
-
       }
-      
       product.brand = await this.DrugRepository.findOneBy({
         id: createProductDto.brandId
       })
 
       await this.productRepository.save(product);
       return product;
+
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException(error);
