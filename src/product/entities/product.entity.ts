@@ -15,7 +15,9 @@ export class Product {
     @Column('text')
     description: string;
 
-    @Column('text')
+    @Column('text', { 
+        nullable: true 
+    })
     additional_info: string;
 
     @Column('float')
@@ -30,14 +32,14 @@ export class Product {
     @Column('boolean')
     is_fractionable: boolean;
 
-    @ManyToOne(() => Drug , drug => drug.products)
-    drug?: Drug
+    @ManyToOne(() => Drug, { nullable: true })
+    drug?: Drug | null;
 
-    @ManyToOne(() => Laboratory , laboratory => laboratory.products)
-    laboratory?: Laboratory
+    @ManyToOne(() => Laboratory, { nullable: true })
+    laboratory?: Laboratory | null;
 
-    @ManyToOne(() => Presentation , presentation => presentation.products)
-    presentation?: Presentation
+    @ManyToOne(() => Presentation, { nullable: true })
+    presentation?: Presentation | null;
 
     @ManyToOne(() => Brand , presentation => presentation.products)
     brand?: Brand

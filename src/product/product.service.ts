@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Drug } from 'src/drug/entities/drug.entity';
 import { Laboratory } from 'src/laboratory/entities/laboratory.entity';
 import { Presentation } from 'src/presentation/entities/presentation.entity';
+import { Brand } from 'src/brand/entities/brand.entity';
 
 @Injectable()
 export class ProductService {
@@ -19,45 +20,53 @@ export class ProductService {
     private readonly drugRepository: Repository<Drug>,
 
     @InjectRepository( Laboratory )
-    private readonly lavoratoryRepository: Repository<Laboratory>,
+    private readonly laboratoryRepository: Repository<Laboratory>,
 
     @InjectRepository( Presentation )
     private readonly presentationRepository: Repository<Presentation>,
 
-    @InjectRepository( Drug )
-    private readonly DrugRepository: Repository<Drug>,
+    @InjectRepository( Brand )
+    private readonly brandRepository: Repository<Brand>,
   ) {}
   async create(createProductDto: CreateProductDto) {
     try {
       const product = this.productRepository.create(createProductDto);
-      product.drug = await this.drugRepository.findOneBy({
-        id: createProductDto.drugId
-      })
 
-      product.laboratory = await this.lavoratoryRepository.findOneBy({
-        id: createProductDto.laboratoryId
-      })
-      
-      product.presentation = await this.presentationRepository.findOneBy({
-        id: createProductDto.presentationId
-      })
-
-      product.brand = await this.DrugRepository.findOneBy({
+      if(product.is_medicine){
+        if(!createProductDto.drugId || !createProductDto.laboratoryId || !createProductDto.presentationId){
+          throw new NotFoundException("Error creating Product. presentation, laboratory and drug cannot be null")
+        }
+        const drug = await this.drugRepository.findOneBy({
+          id: createProductDto.drugId
+        })
+        const laboratory = await this.laboratoryRepository.findOneBy({
+          id: createProductDto.laboratoryId
+        })
+        const presentation = await this.presentationRepository.findOneBy({
+          id: createProductDto.presentationId
+        })
+        if(!drug || !laboratory || !presentation){
+          throw new NotFoundException("Error creating Product. None of these entities were found, presentation, laboratory and drug.")
+        }
+        product.presentation = presentation
+        product.laboratory = laboratory
+        product.drug = drug
+      }
+      product.brand = await this.brandRepository.findOneBy({
         id: createProductDto.brandId
       })
 
       await this.productRepository.save(product);
       return product;
+
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException("Error creating Product");
+      throw new InternalServerErrorException(error);
     }
   }
   
-
-
-  findAll() {
-    return this.productRepository.find(
+  async findAll() {
+    return await this.productRepository.find(
       {
         relations: {
           drug: true,
@@ -70,15 +79,85 @@ export class ProductService {
   }
   
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: number) {
+    return await this.productRepository.findOne({ 
+      where: { id },
+      relations: { 
+        drug: true,
+        laboratory: true,
+        presentation: true,
+        brand: true 
+      } });
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: number, updateProductDto: UpdateProductDto) {
+    try {
+      const product = await this.productRepository.findOne({ 
+        where: { id },
+        relations: { 
+          drug: true,
+          laboratory: true,
+          presentation: true,
+          brand: true 
+        } });
+
+        if(product.is_medicine){
+          if(!updateProductDto.drugId || !updateProductDto.laboratoryId || !updateProductDto.presentationId){
+            throw new NotFoundException("Error update Product. presentation, laboratory and drug cannot be null")
+          }
+          const drug = await this.drugRepository.findOneBy({
+            id: updateProductDto.drugId
+          })
+          const laboratory = await this.laboratoryRepository.findOneBy({
+            id: updateProductDto.laboratoryId
+          })
+          const presentation = await this.presentationRepository.findOneBy({
+            id: updateProductDto.presentationId
+          })
+          if(!drug || !laboratory || !presentation){
+            throw new NotFoundException("Error update Product. None of these entities were found, presentation, laboratory and drug.")
+          }
+          product.presentation = presentation
+          product.laboratory = laboratory
+          product.drug = drug 
+    } 
+      product.name = updateProductDto.name
+      product.description = updateProductDto.description
+      product.additional_info = updateProductDto.additional_info
+      product.price = updateProductDto.price
+      product.prescription_required = updateProductDto.prescription_required
+      product.is_medicine = updateProductDto.is_medicine
+      product.is_fractionable = updateProductDto.is_fractionable
+    
+      if(updateProductDto.brandId){
+        const brand = await this.brandRepository.findOneBy({
+           id: updateProductDto.brandId
+        })
+        if(!brand){
+          throw new NotFoundException("Error update Product. None of these entities were found, brand.")
+        }
+        product.brand = brand
+      }
+      
+    return product
+  }
+    catch (error) {
+      console.log(error)
+      throw new NotFoundException(error)
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: number) {
+    try {
+      const role = await this.productRepository.findOne({ where: { id } });
+      if (!role) {
+        throw new NotFoundException(`Error Get product by id ${id}`)
+      }
+      await this.productRepository.delete(id);
+      return true;
+    } catch (error) {
+      console.log(error)
+      throw new NotFoundException(`Error Get roles by id ${id}`)
+    }
   }
 }
