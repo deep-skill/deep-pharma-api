@@ -1,4 +1,5 @@
 import { Role } from "src/role/entities/role.entity";
+import { Sale } from "src/sale/entities/sale.entity";
 import {
   Column,
   Entity,
@@ -14,14 +15,13 @@ export class User {
   @Column("text")
   name: string;
   @Column("text")
-  lastName: string;
-  @Column("int", {
-    unique: true,
-  })
-  dni: number;
-  @Column()
-  password: string;
+  last_name: string;
+  @Column("text")
+  email: string;
 
   @ManyToOne(() => Role, (role) => role.users)
   role: Role;
+
+  @OneToMany(() => Sale, (sale) => sale.user)
+  sales: Sale[]
 }
