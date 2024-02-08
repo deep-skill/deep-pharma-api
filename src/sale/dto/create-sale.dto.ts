@@ -1,4 +1,4 @@
-import { IsDateString, IsNumber, IsString } from "class-validator";
+import { IsArray, IsDateString, IsNumber, IsString } from "class-validator";
 
 export class CreateSaleDto {
     @IsDateString()
@@ -13,5 +13,7 @@ export class CreateSaleDto {
     @IsNumber()
     userId: number;
 
+    @IsArray()
+    lotsId: number[]
 }
 
