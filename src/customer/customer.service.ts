@@ -1,26 +1,85 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCustomerDto } from './dto/create-customer.dto';
-import { UpdateCustomerDto } from './dto/update-customer.dto';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from "@nestjs/common";
+import { CreateCustomerDto } from "./dto/create-customer.dto";
+import { UpdateCustomerDto } from "./dto/update-customer.dto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Customer } from "./entities/customer.entity";
+import { Repository } from "typeorm";
 
 @Injectable()
 export class CustomerService {
-  create(createCustomerDto: CreateCustomerDto) {
-    return 'This action adds a new customer';
+  constructor(
+    @InjectRepository(Customer)
+    private readonly customerRepository: Repository<Customer>
+  ) {}
+  async create(createCustomerDto: CreateCustomerDto) {
+    try {
+      const customer = this.customerRepository.create(createCustomerDto);
+      await this.customerRepository.save(customer);
+      return customer;
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException("Error creating customer");
+    }
   }
 
-  findAll() {
-    return `This action returns all customer`;
+  async findAll() {
+    try {
+      const customers = await this.customerRepository.find();
+      return customers;
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException("Error Gettting all  customers");
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} customer`;
+  async findOne(id: number) {
+    try {
+      const customer = await this.customerRepository.findOne({
+        where: { id },
+      });
+      if (!customer) {
+        throw new NotFoundException(`Error Get customer by id ${id}`);
+      }
+      return customer;
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException("Error getting customer by id");
+    }
   }
 
-  update(id: number, updateCustomerDto: UpdateCustomerDto) {
-    return `This action updates a #${id} customer`;
+  async update(id: number, updateCustomerDto: UpdateCustomerDto) {
+    try {
+      const customer = await this.customerRepository.findOne({
+        where: { id },
+      });
+      if (!customer) {
+        throw new NotFoundException(`Error update customer by id ${id}`);
+      }
+      await this.customerRepository.update(id, updateCustomerDto);
+      return true;
+    } catch (error) {
+      console.log(error);
+      throw new NotFoundException(`Error update customer by id ${id}`);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} customer`;
+  async remove(id: number) {
+    try {
+      const customer = await this.customerRepository.findOne({
+        where: { id },
+      });
+      if (!customer) {
+        throw new NotFoundException(`Error remove customer by id ${id}`);
+      }
+      await this.customerRepository.delete(id);
+      return true;
+    } catch (error) {
+      console.log(error);
+      throw new NotFoundException(`Error remove customer by id ${id}`);
+    }
   }
 }
