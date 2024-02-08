@@ -75,7 +75,7 @@ export class LotService {
       return lot;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException("Error getting lot");
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -106,7 +106,7 @@ export class LotService {
       return await this.lotRepository.save(lot);
     } catch (error) {
       console.log(error);
-      throw new NotFoundException(`Error update lot by id ${id}`);
+      throw new NotFoundException(error);
     }
   }
 
@@ -120,7 +120,7 @@ export class LotService {
       return true;
     } catch (error) {
       console.log(error);
-      throw new NotFoundException(`Error remove lot by id ${id}`);
+      throw new NotFoundException(error);
     }
   }
 }
