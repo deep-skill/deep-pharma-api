@@ -45,7 +45,7 @@ export class SupplierService {
       return supplier;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException("Error getting supplier");
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -59,7 +59,7 @@ export class SupplierService {
       return true;
     } catch (error) {
       console.log(error);
-      throw new NotFoundException(`Error update supplier by id ${id}`);
+      throw new NotFoundException(error);
     }
   }
 
@@ -73,7 +73,7 @@ export class SupplierService {
       return true;
     } catch (error) {
       console.log(error);
-      throw new NotFoundException(`Error remove supplier by id ${id}`);
+      throw new NotFoundException(error);
     }
   }
 }

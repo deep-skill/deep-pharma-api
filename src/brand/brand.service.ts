@@ -42,7 +42,7 @@ export class BrandService {
       return brand;
     } catch (error) {
       console.log(error)
-      throw new InternalServerErrorException('Error Get brand')
+      throw new InternalServerErrorException(error)
     }
   }
 
@@ -56,7 +56,7 @@ export class BrandService {
       return true;
     } catch (error) {
       console.log(error)
-      throw new NotFoundException(`Error Get brands by id ${id}`)
+      throw new NotFoundException(error)
     }
   }
 

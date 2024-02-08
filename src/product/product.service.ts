@@ -66,28 +66,44 @@ export class ProductService {
   }
   
   async findAll() {
-    return await this.productRepository.find(
-      {
-        relations: {
-          drug: true,
-          laboratory: true,
-          presentation: true,
-          brand: true
+    try {
+      return await this.productRepository.find(
+        {
+          relations: {
+            drug: true,
+            laboratory: true,
+            presentation: true,
+            brand: true
+          }
         }
-      }
-    );
+      );
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException(error);
+    }
+    
   }
   
 
   async findOne(id: number) {
-    return await this.productRepository.findOne({ 
-      where: { id },
-      relations: { 
-        drug: true,
-        laboratory: true,
-        presentation: true,
-        brand: true 
-      } });
+    try {
+      const product = await this.productRepository.findOne({ 
+        where: { id },
+        relations: { 
+          drug: true,
+          laboratory: true,
+          presentation: true,
+          brand: true 
+        } });
+        if(!product){
+          throw new NotFoundException(`Error Get product by id ${id}`)
+        }
+        return product
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException(error);
+    }
+   
   }
 
   async update(id: number, updateProductDto: UpdateProductDto) {
@@ -138,7 +154,7 @@ export class ProductService {
         }
         product.brand = brand
       }
-      
+      await this.productRepository.save(product);
     return product
   }
     catch (error) {

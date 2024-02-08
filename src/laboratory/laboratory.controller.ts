@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { LaboratoryService } from './laboratory.service';
 import { CreateLaboratoryDto } from './dto/create-laboratory.dto';
 import { UpdateLaboratoryDto } from './dto/update-laboratory.dto';
@@ -18,17 +18,17 @@ export class LaboratoryController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.laboratoryService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.laboratoryService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLaboratoryDto: UpdateLaboratoryDto) {
-    return this.laboratoryService.update(+id, updateLaboratoryDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateLaboratoryDto: UpdateLaboratoryDto) {
+    return this.laboratoryService.update(id, updateLaboratoryDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.laboratoryService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.laboratoryService.remove(id);
   }
 }
