@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
@@ -30,18 +30,33 @@ export class ProductService {
   async create(createProductDto: CreateProductDto) {
     try {
       const product = this.productRepository.create(createProductDto);
-      product.drug = await this.drugRepository.findOneBy({
-        id: createProductDto.drugId
-      })
 
-      product.laboratory = await this.lavoratoryRepository.findOneBy({
-        id: createProductDto.laboratoryId
-      })
+      if(product.is_medicine){
+
+        if(!createProductDto.drugId || !createProductDto.laboratoryId || !createProductDto.presentationId){
+          throw new NotFoundException("Error creating Product. presentation, laboratory and drug cannot be null")
+        }
+
+        const drug = await this.drugRepository.findOneBy({
+          id: createProductDto.drugId
+        })
+  
+        const laboratory = await this.lavoratoryRepository.findOneBy({
+          id: createProductDto.laboratoryId
+        })
+        
+        const presentation = await this.presentationRepository.findOneBy({
+          id: createProductDto.presentationId
+        })
+        if(!drug || !laboratory || !presentation){
+          throw new NotFoundException("Error creating Product. None of these entities were found, presentation, laboratory and drug.")
+        }
+        product.presentation = presentation
+        product.laboratory = laboratory
+        product.drug = drug
+
+      }
       
-      product.presentation = await this.presentationRepository.findOneBy({
-        id: createProductDto.presentationId
-      })
-
       product.brand = await this.DrugRepository.findOneBy({
         id: createProductDto.brandId
       })
@@ -50,7 +65,7 @@ export class ProductService {
       return product;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException("Error creating Product");
+      throw new InternalServerErrorException(error);
     }
   }
   

@@ -8,6 +8,7 @@ export class CreateProductDto {
     description: string
 
     @IsString()
+    @IsOptional()
     additional_info: string
 
     @IsNumber()
