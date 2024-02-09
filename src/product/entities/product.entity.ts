@@ -3,6 +3,7 @@ import { Drug } from "src/drug/entities/drug.entity";
 import { Laboratory } from "src/laboratory/entities/laboratory.entity";
 import { Lot } from "src/lot/entities/lot.entity";
 import { Presentation } from "src/presentation/entities/presentation.entity";
+import { Type } from "src/type/entities/type.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
@@ -44,6 +45,9 @@ export class Product {
 
     @ManyToOne(() => Brand , presentation => presentation.products)
     brand?: Brand
+
+    @ManyToOne(() => Type, lot => lot.products)
+    type: Type
 
     @OneToMany(() => Lot, lot => lot.product)
     lots: Lot[]

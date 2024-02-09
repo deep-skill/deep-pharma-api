@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { TypeService } from './type.service';
 import { CreateTypeDto } from './dto/create-type.dto';
 import { UpdateTypeDto } from './dto/update-type.dto';
@@ -18,17 +18,17 @@ export class TypeController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.typeService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.typeService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTypeDto: UpdateTypeDto) {
-    return this.typeService.update(+id, updateTypeDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateTypeDto: UpdateTypeDto) {
+    return this.typeService.update(id, updateTypeDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.typeService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.typeService.remove(id);
   }
 }

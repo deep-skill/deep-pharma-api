@@ -38,4 +38,8 @@ export class CreateProductDto {
     @IsNumber()
     @IsOptional()
     brandId: number
+
+    @IsNumber()
+    @IsOptional()
+    typeId: number
 }

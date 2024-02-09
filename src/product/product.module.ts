@@ -7,6 +7,7 @@ import { Drug } from 'src/drug/entities/drug.entity';
 import { Laboratory } from 'src/laboratory/entities/laboratory.entity';
 import { Presentation } from 'src/presentation/entities/presentation.entity';
 import { Brand } from 'src/brand/entities/brand.entity';
+import { Type } from 'src/type/entities/type.entity';
 
 @Module({
   controllers: [ProductController],
@@ -17,7 +18,8 @@ import { Brand } from 'src/brand/entities/brand.entity';
       Drug, 
       Laboratory, 
       Presentation,
-      Brand
+      Brand,
+      Type
     ]),
   ],
   exports: [

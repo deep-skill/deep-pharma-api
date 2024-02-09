@@ -1,26 +1,76 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateTypeDto } from './dto/create-type.dto';
 import { UpdateTypeDto } from './dto/update-type.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Type } from './entities/type.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class TypeService {
-  create(createTypeDto: CreateTypeDto) {
-    return 'This action adds a new type';
+
+  constructor(
+    @InjectRepository( Type )
+    private readonly brandRepository: Repository<Type>
+  ) {}
+  async create(createTypeDto: CreateTypeDto) {
+    try {
+      const type = this.brandRepository.create( createTypeDto );
+      await this.brandRepository.save( type );
+      return type;
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException(error)
+    }
   }
 
-  findAll() {
-    return `This action returns all type`;
+  async findAll() {
+    try {
+      const types = await this.brandRepository.find();
+      return types;
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException(error)
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} type`;
+  async findOne(id: number) {
+    try {
+      const type = await this.brandRepository.findOne({ where: { id } });
+      if (!type) {
+        throw new NotFoundException(`Error Get type by id ${id}`)
+      }
+      return type;
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException(error)
+    }
   }
 
-  update(id: number, updateTypeDto: UpdateTypeDto) {
-    return `This action updates a #${id} type`;
+  async update(id: number, updateTypeDto: UpdateTypeDto) {
+    try {
+      const type = await this.brandRepository.findOne({ where: { id } });
+      if (!type) {
+        throw new NotFoundException(`Error Get brands by id ${id}`)
+      }
+      await this.brandRepository.update(id, updateTypeDto);
+      return true;
+    } catch (error) {
+      console.log(error)
+      throw new NotFoundException(error)
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} type`;
+  async remove(id: number) {
+    try {
+      const type = await this.brandRepository.findOne({ where: { id } });
+      if (!type) {
+        throw new NotFoundException(`Error Get brands by id ${id}`)
+      }
+      await this.brandRepository.delete(id);
+      return true;
+    } catch (error) {
+      console.log(error)
+      throw new NotFoundException(error)
+    }
   }
 }

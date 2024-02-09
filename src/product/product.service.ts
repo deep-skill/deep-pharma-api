@@ -8,6 +8,7 @@ import { Drug } from 'src/drug/entities/drug.entity';
 import { Laboratory } from 'src/laboratory/entities/laboratory.entity';
 import { Presentation } from 'src/presentation/entities/presentation.entity';
 import { Brand } from 'src/brand/entities/brand.entity';
+import { Type } from 'src/type/entities/type.entity';
 
 @Injectable()
 export class ProductService {
@@ -27,6 +28,9 @@ export class ProductService {
 
     @InjectRepository( Brand )
     private readonly brandRepository: Repository<Brand>,
+
+    @InjectRepository( Type )
+    private readonly typeRepository: Repository<Type>,
   ) {}
   async create(createProductDto: CreateProductDto) {
     try {
@@ -52,9 +56,20 @@ export class ProductService {
         product.laboratory = laboratory
         product.drug = drug
       }
-      product.brand = await this.brandRepository.findOneBy({
+       const brand = await this.brandRepository.findOneBy({
         id: createProductDto.brandId
       })
+
+      const type = await this.typeRepository.findOneBy({
+        id: createProductDto.typeId
+      })
+
+      if(!brand || !type){
+        throw new NotFoundException("Error creating Product. None of these entities were found, brand and type.")
+      }
+
+      product.brand = brand
+      product.type = type
 
       await this.productRepository.save(product);
       return product;
