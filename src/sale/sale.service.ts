@@ -36,9 +36,7 @@ export class SaleService {
       getLots.forEach( async lot => {
         lot.updated_stock  =  lot.updated_stock - createSaleDto.lotsArray[getLots.indexOf(lot)].quantity
     
-        if(lot.updated_stock < 0){
-          
-        }
+       
         if(lot.updated_stock === 0){
           lot.lot_state = false
         }
