@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException, NotFoundException } from '@ne
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { UpdateSaleDto } from './dto/update-sale.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MoreThanOrEqual, Repository } from 'typeorm';
 import { Sale } from './entities/sale.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Lot } from 'src/lot/entities/lot.entity';
@@ -25,18 +25,39 @@ export class SaleService {
         id: createSaleDto.userId
       });
 
-      const lots = createSaleDto.lotsId.map(async (lotId) => {
-        return await this.lotRepository.findOneBy({
-          id: lotId
+      const lots = createSaleDto.lotsArray.map(async (lot) => {
+        
+        const getLotId = await this.lotRepository.findOneBy({
+          id: lot.lotId,
+          lot_state: true,
+          updated_stock: MoreThanOrEqual(lot.quantity)
         });
+
+        if(!getLotId){
+          throw new NotFoundException(`Error Get lot by id ${lot.lotId}`)
+        }
+        return getLotId
       });
-      sale.lots = await Promise.all(lots);
+
+      const getLots = await Promise.all(lots);
+
+      getLots.forEach( async lot => {
+        lot.updated_stock  =  lot.updated_stock - createSaleDto.lotsArray[getLots.indexOf(lot)].quantity
+    
+       
+        if(lot.updated_stock === 0){
+          lot.lot_state = false
+        }
+        await this.lotRepository.save(lot);
+       }) 
+
+      sale.lots = getLots
 
       await this.saleRepository.save(sale);
       return sale;
     } catch (error) {
       console.log(error)
-      throw new InternalServerErrorException('Error creating sale')
+      throw new InternalServerErrorException(error)
     }
   }
 

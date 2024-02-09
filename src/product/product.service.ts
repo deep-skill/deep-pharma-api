@@ -93,7 +93,8 @@ export class ProductService {
           drug: true,
           laboratory: true,
           presentation: true,
-          brand: true 
+          brand: true ,
+          lots: true
         } });
         if(!product){
           throw new NotFoundException(`Error Get product by id ${id}`)
