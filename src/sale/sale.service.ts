@@ -25,18 +25,33 @@ export class SaleService {
         id: createSaleDto.userId
       });
 
-      const lots = createSaleDto.lotsId.map(async (lotId) => {
+      const lots = createSaleDto.lotsArray.map(async (lot) => {
         return await this.lotRepository.findOneBy({
-          id: lotId
+          id: lot.lotId
         });
       });
-      sale.lots = await Promise.all(lots);
+
+      const getLots = await Promise.all(lots);
+
+      getLots.forEach( async lot => {
+        lot.updated_stock  =  lot.updated_stock - createSaleDto.lotsArray[getLots.indexOf(lot)].quantity
+    
+        if(lot.updated_stock < 0){
+          
+        }
+        if(lot.updated_stock === 0){
+          lot.lot_state = false
+        }
+        await this.lotRepository.save(lot);
+       }) 
+
+      sale.lots = getLots
 
       await this.saleRepository.save(sale);
       return sale;
     } catch (error) {
       console.log(error)
-      throw new InternalServerErrorException('Error creating sale')
+      throw new InternalServerErrorException(error)
     }
   }
 
