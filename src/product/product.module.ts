@@ -4,7 +4,6 @@ import { ProductController } from './product.controller';
 import { Product } from './entities/product.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Drug } from 'src/drug/entities/drug.entity';
-import { Laboratory } from 'src/laboratory/entities/laboratory.entity';
 import { Presentation } from 'src/presentation/entities/presentation.entity';
 import { Brand } from 'src/brand/entities/brand.entity';
 import { Type } from 'src/type/entities/type.entity';
@@ -16,7 +15,6 @@ import { Type } from 'src/type/entities/type.entity';
     TypeOrmModule.forFeature([ 
       Product, 
       Drug, 
-      Laboratory, 
       Presentation,
       Brand,
       Type

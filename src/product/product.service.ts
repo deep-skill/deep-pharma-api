@@ -5,7 +5,6 @@ import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Drug } from 'src/drug/entities/drug.entity';
-import { Laboratory } from 'src/laboratory/entities/laboratory.entity';
 import { Presentation } from 'src/presentation/entities/presentation.entity';
 import { Brand } from 'src/brand/entities/brand.entity';
 import { Type } from 'src/type/entities/type.entity';
@@ -19,9 +18,6 @@ export class ProductService {
 
     @InjectRepository( Drug )
     private readonly drugRepository: Repository<Drug>,
-
-    @InjectRepository( Laboratory )
-    private readonly laboratoryRepository: Repository<Laboratory>,
 
     @InjectRepository( Presentation )
     private readonly presentationRepository: Repository<Presentation>,
@@ -43,17 +39,13 @@ export class ProductService {
         const drug = await this.drugRepository.findOneBy({
           id: createProductDto.drugId
         })
-        const laboratory = await this.laboratoryRepository.findOneBy({
-          id: createProductDto.laboratoryId
-        })
         const presentation = await this.presentationRepository.findOneBy({
           id: createProductDto.presentationId
         })
-        if(!drug || !laboratory || !presentation){
+        if(!drug || !presentation){
           throw new NotFoundException("Error creating Product. None of these entities were found, presentation, laboratory and drug.")
         }
         product.presentation = presentation
-        product.laboratory = laboratory
         product.drug = drug
       }
        const brand = await this.brandRepository.findOneBy({
@@ -86,7 +78,6 @@ export class ProductService {
         {
           relations: {
             drug: true,
-            laboratory: true,
             presentation: true,
             brand: true
           }
@@ -106,7 +97,6 @@ export class ProductService {
         where: { id },
         relations: { 
           drug: true,
-          laboratory: true,
           presentation: true,
           brand: true 
         } });
@@ -127,7 +117,6 @@ export class ProductService {
         where: { id },
         relations: { 
           drug: true,
-          laboratory: true,
           presentation: true,
           brand: true 
         } });
@@ -139,17 +128,13 @@ export class ProductService {
           const drug = await this.drugRepository.findOneBy({
             id: updateProductDto.drugId
           })
-          const laboratory = await this.laboratoryRepository.findOneBy({
-            id: updateProductDto.laboratoryId
-          })
           const presentation = await this.presentationRepository.findOneBy({
             id: updateProductDto.presentationId
           })
-          if(!drug || !laboratory || !presentation){
+          if(!drug ||  !presentation){
             throw new NotFoundException("Error update Product. None of these entities were found, presentation, laboratory and drug.")
           }
           product.presentation = presentation
-          product.laboratory = laboratory
           product.drug = drug 
     } 
       product.name = updateProductDto.name

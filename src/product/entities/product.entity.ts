@@ -1,6 +1,5 @@
 import { Brand } from "src/brand/entities/brand.entity";
 import { Drug } from "src/drug/entities/drug.entity";
-import { Laboratory } from "src/laboratory/entities/laboratory.entity";
 import { Lot } from "src/lot/entities/lot.entity";
 import { Presentation } from "src/presentation/entities/presentation.entity";
 import { Type } from "src/type/entities/type.entity";
@@ -36,9 +35,6 @@ export class Product {
 
     @ManyToOne(() => Drug, { nullable: true })
     drug?: Drug | null;
-
-    @ManyToOne(() => Laboratory, { nullable: true })
-    laboratory?: Laboratory | null;
 
     @ManyToOne(() => Presentation, { nullable: true })
     presentation?: Presentation | null;
