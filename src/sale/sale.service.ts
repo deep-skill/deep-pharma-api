@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException, NotFoundException } from '@ne
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { UpdateSaleDto } from './dto/update-sale.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MoreThanOrEqual, Repository } from 'typeorm';
 import { Sale } from './entities/sale.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Lot } from 'src/lot/entities/lot.entity';
@@ -26,9 +26,17 @@ export class SaleService {
       });
 
       const lots = createSaleDto.lotsArray.map(async (lot) => {
-        return await this.lotRepository.findOneBy({
-          id: lot.lotId
+        
+        const getLotId = await this.lotRepository.findOneBy({
+          id: lot.lotId,
+          lot_state: true,
+          updated_stock: MoreThanOrEqual(lot.quantity)
         });
+
+        if(!getLotId){
+          throw new NotFoundException(`Error Get lot by id ${lot.lotId}`)
+        }
+        return getLotId
       });
 
       const getLots = await Promise.all(lots);
