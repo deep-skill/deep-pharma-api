@@ -15,6 +15,7 @@ import { SaleModule } from './sale/sale.module';
 import { CustomerModule } from './customer/customer.module';
 import { UserModule } from './user/user.module';
 import { RoleModule } from './role/role.module';
+import { TypeModule } from './type/type.module';
 
 @Module({
   imports: [
@@ -40,7 +41,8 @@ import { RoleModule } from './role/role.module';
     SaleModule,
     CustomerModule,
     UserModule,
-    RoleModule
+    RoleModule,
+    TypeModule
   ],
   controllers: [AppController],
   providers: [AppService],
