@@ -5,9 +5,9 @@ import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Drug } from 'src/drug/entities/drug.entity';
-import { Laboratory } from 'src/laboratory/entities/laboratory.entity';
 import { Presentation } from 'src/presentation/entities/presentation.entity';
 import { Brand } from 'src/brand/entities/brand.entity';
+import { Type } from 'src/type/entities/type.entity';
 
 @Injectable()
 export class ProductService {
@@ -19,14 +19,14 @@ export class ProductService {
     @InjectRepository( Drug )
     private readonly drugRepository: Repository<Drug>,
 
-    @InjectRepository( Laboratory )
-    private readonly laboratoryRepository: Repository<Laboratory>,
-
     @InjectRepository( Presentation )
     private readonly presentationRepository: Repository<Presentation>,
 
     @InjectRepository( Brand )
     private readonly brandRepository: Repository<Brand>,
+
+    @InjectRepository( Type )
+    private readonly typeRepository: Repository<Type>,
   ) {}
   async create(createProductDto: CreateProductDto) {
     try {
@@ -39,22 +39,29 @@ export class ProductService {
         const drug = await this.drugRepository.findOneBy({
           id: createProductDto.drugId
         })
-        const laboratory = await this.laboratoryRepository.findOneBy({
-          id: createProductDto.laboratoryId
-        })
         const presentation = await this.presentationRepository.findOneBy({
           id: createProductDto.presentationId
         })
-        if(!drug || !laboratory || !presentation){
+        if(!drug || !presentation){
           throw new NotFoundException("Error creating Product. None of these entities were found, presentation, laboratory and drug.")
         }
         product.presentation = presentation
-        product.laboratory = laboratory
         product.drug = drug
       }
-      product.brand = await this.brandRepository.findOneBy({
+       const brand = await this.brandRepository.findOneBy({
         id: createProductDto.brandId
       })
+
+      const type = await this.typeRepository.findOneBy({
+        id: createProductDto.typeId
+      })
+
+      if(!brand || !type){
+        throw new NotFoundException("Error creating Product. None of these entities were found, brand and type.")
+      }
+
+      product.brand = brand
+      product.type = type
 
       await this.productRepository.save(product);
       return product;
@@ -71,7 +78,6 @@ export class ProductService {
         {
           relations: {
             drug: true,
-            laboratory: true,
             presentation: true,
             brand: true
           }
@@ -91,7 +97,6 @@ export class ProductService {
         where: { id },
         relations: { 
           drug: true,
-          laboratory: true,
           presentation: true,
           brand: true ,
           lots: true
@@ -113,7 +118,6 @@ export class ProductService {
         where: { id },
         relations: { 
           drug: true,
-          laboratory: true,
           presentation: true,
           brand: true 
         } });
@@ -125,17 +129,13 @@ export class ProductService {
           const drug = await this.drugRepository.findOneBy({
             id: updateProductDto.drugId
           })
-          const laboratory = await this.laboratoryRepository.findOneBy({
-            id: updateProductDto.laboratoryId
-          })
           const presentation = await this.presentationRepository.findOneBy({
             id: updateProductDto.presentationId
           })
-          if(!drug || !laboratory || !presentation){
+          if(!drug ||  !presentation){
             throw new NotFoundException("Error update Product. None of these entities were found, presentation, laboratory and drug.")
           }
           product.presentation = presentation
-          product.laboratory = laboratory
           product.drug = drug 
     } 
       product.name = updateProductDto.name

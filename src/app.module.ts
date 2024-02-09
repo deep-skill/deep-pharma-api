@@ -6,7 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BrandModule } from './brand/brand.module';
 import { DrugModule } from './drug/drug.module';
 import { PresentationModule } from './presentation/presentation.module';
-import { LaboratoryModule } from './laboratory/laboratory.module';
 import { ProductModule } from './product/product.module';
 import { LotModule } from './lot/lot.module';
 import { SupplierModule } from './supplier/supplier.module';
@@ -15,6 +14,7 @@ import { SaleModule } from './sale/sale.module';
 import { CustomerModule } from './customer/customer.module';
 import { UserModule } from './user/user.module';
 import { RoleModule } from './role/role.module';
+import { TypeModule } from './type/type.module';
 
 @Module({
   imports: [
@@ -32,7 +32,6 @@ import { RoleModule } from './role/role.module';
     BrandModule,
     DrugModule,
     PresentationModule,
-    LaboratoryModule,
     ProductModule,
     LotModule,
     SupplierModule,
@@ -40,7 +39,8 @@ import { RoleModule } from './role/role.module';
     SaleModule,
     CustomerModule,
     UserModule,
-    RoleModule
+    RoleModule,
+    TypeModule
   ],
   controllers: [AppController],
   providers: [AppService],
