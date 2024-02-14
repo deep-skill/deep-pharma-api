@@ -22,19 +22,19 @@ export class SaleService {
     try {
       const sale = this.saleRepository.create(createSaleDto);
       sale.user = await this.userRepository.findOneBy({
-        id: createSaleDto.userId
+        id: createSaleDto.user_id
       });
 
       const lots = createSaleDto.lotsArray.map(async (lot) => {
         
         const getLotId = await this.lotRepository.findOneBy({
-          id: lot.lotId,
+          id: lot.lot_id,
           lot_state: true,
           updated_stock: MoreThanOrEqual(lot.quantity)
         });
 
         if(!getLotId){
-          throw new NotFoundException(`Error Get lot by id ${lot.lotId}`)
+          throw new NotFoundException(`Error Get lot by id ${lot.lot_id}`)
         }
         return getLotId
       });

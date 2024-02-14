@@ -22,7 +22,7 @@ export class UserService {
     try {
       const user = this.userRepository.create(createUserDto);
       user.role = await this.roleRepository.findOneBy({
-        id: createUserDto.roleId,
+        id: createUserDto.role_id,
       });
       await this.userRepository.save(user);
       return user;
@@ -62,7 +62,7 @@ export class UserService {
     try {
       const user = await this.userRepository.findOne({ where: { id } });
       user.role = await this.roleRepository.findOneBy({
-        id: updateUserDto.roleId,
+        id: updateUserDto.role_id,
       });
       if (!user) {
         throw new NotFoundException(`Error expeption update user by id ${id}`);

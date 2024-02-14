@@ -3,6 +3,7 @@ import { Sale } from "src/sale/entities/sale.entity";
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -20,6 +21,7 @@ export class User {
   email: string;
 
   @ManyToOne(() => Role, (role) => role.users)
+  @JoinColumn({ name: 'role_id' })
   role: Role;
 
   @OneToMany(() => Sale, (sale) => sale.user)

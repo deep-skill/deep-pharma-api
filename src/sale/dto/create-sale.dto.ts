@@ -11,7 +11,7 @@ export class CreateSaleDto {
     sale_type: string;
 
     @IsNumber()
-    userId: number;
+    user_id: number;
 
     @IsArray()
     lotsArray: lots[]
@@ -20,7 +20,7 @@ export class CreateSaleDto {
 export class lots {
 
     @IsNumber()
-    lotId: number
+    lot_id: number
 
     @IsNumber()
     quantity: number

@@ -24,11 +24,11 @@ export class LotService {
       const lot = this.lotRepository.create(createLotDto);
       
       const supplier = await this.supplierRepository.findOneBy({
-        id: createLotDto.supplierId
+        id: createLotDto.supplier_id
       })
 
       const product = await this.productRepository.findOneBy({
-        id: createLotDto.productId
+        id: createLotDto.product_id
       })
 
       if(!supplier || !product){
@@ -86,11 +86,11 @@ export class LotService {
         throw new NotFoundException(`Error update lot by id ${id}`);
       }
       const supplier = await this.supplierRepository.findOneBy({
-        id: updateLotDto.supplierId
+        id: updateLotDto.supplier_id
       })
 
       const product = await this.productRepository.findOneBy({
-        id: updateLotDto.productId
+        id: updateLotDto.product_id
       })
 
       if(!supplier || !product){

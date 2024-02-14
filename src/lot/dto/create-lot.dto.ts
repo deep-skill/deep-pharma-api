@@ -14,8 +14,8 @@ export class CreateLotDto {
     lot_state: boolean;
 
     @IsNumber()
-    supplierId: number;
+    supplier_id: number;
 
     @IsNumber()
-    productId: number;
+    product_id: number;
 }
