@@ -14,7 +14,7 @@ export class CreateSaleDto {
     user_id: number;
 
     @IsArray()
-    lotsArray: lots[]
+    lots_array: lots[]
 }
 
 export class lots {
