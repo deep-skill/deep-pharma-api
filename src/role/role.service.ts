@@ -20,7 +20,7 @@ export class RoleService {
       return role;
     } catch (error) {
       console.log(error)
-      throw new InternalServerErrorException('Error creating role')
+      throw new InternalServerErrorException(error)
     }
   }
 
@@ -30,7 +30,7 @@ export class RoleService {
       return roles;
     } catch (error) {
       console.log(error)
-      throw new InternalServerErrorException('Error Get all role')
+      throw new InternalServerErrorException(error)
     }
   }
 
@@ -43,7 +43,7 @@ export class RoleService {
       return role;
     } catch (error) {
       console.log(error)
-      throw new InternalServerErrorException('Error Get role')
+      throw new InternalServerErrorException(error)
     }
   }
 
@@ -57,7 +57,7 @@ export class RoleService {
       return true;
     } catch (error) {
       console.log(error)
-      throw new NotFoundException(`Error Get roles by id ${id}`)
+      throw new NotFoundException(error)
     }
   }
 
@@ -71,7 +71,7 @@ export class RoleService {
       return true;
     } catch (error) {
       console.log(error)
-      throw new NotFoundException(`Error Get roles by id ${id}`)
+      throw new NotFoundException(error)
     }
   }
 }

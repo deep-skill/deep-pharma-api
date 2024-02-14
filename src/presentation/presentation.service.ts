@@ -20,7 +20,7 @@ export class PresentationService {
       return presentation;
     } catch (error) {
       console.log(error)
-      throw new InternalServerErrorException('Error creating presentation')
+      throw new InternalServerErrorException(error)
     }
 
 
@@ -45,7 +45,7 @@ export class PresentationService {
       return presentation;
     } catch (error) {
       console.log(error)
-      throw new InternalServerErrorException('Error Get presentation')
+      throw new InternalServerErrorException(error)
     }
   }
 
@@ -59,7 +59,7 @@ export class PresentationService {
       return true;
     } catch (error) {
       console.log(error)
-      throw new NotFoundException(`Error Get presentations by id ${id}`)
+      throw new NotFoundException(error)
     }
   }
 
@@ -73,7 +73,7 @@ export class PresentationService {
       return true;
     } catch (error) {
       console.log(error)
-      throw new NotFoundException(`Error Get presentations by id ${id}`)
+      throw new NotFoundException(error)
     }
   }
 }

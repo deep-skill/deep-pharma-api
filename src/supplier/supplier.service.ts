@@ -22,7 +22,7 @@ export class SupplierService {
       return supplier;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException("Error creating supplier");
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -32,7 +32,7 @@ export class SupplierService {
       return suppliers;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException("Error Get all drugs");
+      throw new InternalServerErrorException(error);
     }
   }
 

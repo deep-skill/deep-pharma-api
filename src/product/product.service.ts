@@ -174,7 +174,7 @@ export class ProductService {
       return true;
     } catch (error) {
       console.log(error)
-      throw new NotFoundException(`Error Get roles by id ${id}`)
+      throw new NotFoundException(error)
     }
   }
 }

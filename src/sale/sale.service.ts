@@ -67,7 +67,7 @@ export class SaleService {
       return sales;
     } catch (error) {
       console.log(error)
-      throw new InternalServerErrorException('Error Get all sale')
+      throw new InternalServerErrorException(error)
     }
   }
 
@@ -80,7 +80,7 @@ export class SaleService {
       return sale;
     } catch (error) {
       console.log(error)
-      throw new InternalServerErrorException('Error Get sale')
+      throw new InternalServerErrorException(error)
     }
   }
 
@@ -94,7 +94,7 @@ export class SaleService {
       return true;
     } catch (error) {
       console.log(error)
-      throw new NotFoundException(`Error Get sale by id ${id}`)
+      throw new NotFoundException(error)
     }
   }
 
@@ -108,7 +108,7 @@ export class SaleService {
       return true;
     } catch (error) {
       console.log(error)
-      throw new NotFoundException(`Error Get sale by id ${id}`)
+      throw new NotFoundException(error)
     }
   }
 }
