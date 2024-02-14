@@ -56,7 +56,7 @@ export class LotService {
       return lots;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException("Error Get all lots");
+      throw new InternalServerErrorException(error);
     }
   }
 

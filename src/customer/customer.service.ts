@@ -22,7 +22,7 @@ export class CustomerService {
       return customer;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException("Error creating customer");
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -32,7 +32,7 @@ export class CustomerService {
       return customers;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException("Error Gettting all  customers");
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -47,7 +47,7 @@ export class CustomerService {
       return customer;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException("Error getting customer by id");
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -63,7 +63,7 @@ export class CustomerService {
       return true;
     } catch (error) {
       console.log(error);
-      throw new NotFoundException(`Error update customer by id ${id}`);
+      throw new NotFoundException(error);
     }
   }
 
@@ -79,7 +79,7 @@ export class CustomerService {
       return true;
     } catch (error) {
       console.log(error);
-      throw new NotFoundException(`Error remove customer by id ${id}`);
+      throw new NotFoundException(error);
     }
   }
 }

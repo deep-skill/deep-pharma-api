@@ -14,6 +14,9 @@ export class Presentation {
     @Column('int')
     factor: number;
 
+    @Column('text')
+    concentration: string 
+
     @OneToMany(() => Product, product => product.presentation)
     products: Product[]
 }

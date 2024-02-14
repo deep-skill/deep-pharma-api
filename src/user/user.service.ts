@@ -28,7 +28,7 @@ export class UserService {
       return user;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException("Error creating user");
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -38,7 +38,7 @@ export class UserService {
       return users;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException("Error Get all  users");
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -54,7 +54,7 @@ export class UserService {
       return user;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException("Error getting user");
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -71,7 +71,7 @@ export class UserService {
       return true;
     } catch (error) {
       console.log(error);
-      throw new NotFoundException(`Error update user by id ${id}`);
+      throw new NotFoundException(error);
     }
   }
 
@@ -85,7 +85,7 @@ export class UserService {
       return true;
     } catch (error) {
       console.log(error);
-      throw new NotFoundException(`Error remove user by id ${id}`);
+      throw new NotFoundException(error);
     }
   }
 }
