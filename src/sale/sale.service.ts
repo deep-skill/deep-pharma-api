@@ -22,19 +22,19 @@ export class SaleService {
     try {
       const sale = this.saleRepository.create(createSaleDto);
       sale.user = await this.userRepository.findOneBy({
-        id: createSaleDto.userId
+        id: createSaleDto.user_id
       });
 
-      const lots = createSaleDto.lotsArray.map(async (lot) => {
+      const lots = createSaleDto.lots_array.map(async (lot) => {
         
         const getLotId = await this.lotRepository.findOneBy({
-          id: lot.lotId,
+          id: lot.lot_id,
           lot_state: true,
           updated_stock: MoreThanOrEqual(lot.quantity)
         });
 
         if(!getLotId){
-          throw new NotFoundException(`Error Get lot by id ${lot.lotId}`)
+          throw new NotFoundException(`Error Get lot by id ${lot.lot_id}`)
         }
         return getLotId
       });
@@ -42,7 +42,7 @@ export class SaleService {
       const getLots = await Promise.all(lots);
 
       getLots.forEach( async lot => {
-        lot.updated_stock  =  lot.updated_stock - createSaleDto.lotsArray[getLots.indexOf(lot)].quantity
+        lot.updated_stock  =  lot.updated_stock - createSaleDto.lots_array[getLots.indexOf(lot)].quantity
     
        
         if(lot.updated_stock === 0){
@@ -90,7 +90,7 @@ export class SaleService {
       if (!sale) {
         throw new NotFoundException(`Error Get sale by id ${id}`)
       }
-      await this.saleRepository.update(id, updateSaleDto);
+      //await this.saleRepository.update(id, updateSaleDto);
       return true;
     } catch (error) {
       console.log(error)

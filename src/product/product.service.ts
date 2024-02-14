@@ -33,27 +33,27 @@ export class ProductService {
       const product = this.productRepository.create(createProductDto);
 
       if(product.is_medicine){
-        if(!createProductDto.drugId || !createProductDto.laboratoryId || !createProductDto.presentationId){
-          throw new NotFoundException("Error creating Product. presentation, laboratory and drug cannot be null")
+        if(!createProductDto.drug_id ||  !createProductDto.presentation_id){
+          throw new NotFoundException("Error creating Product. presentation and drug cannot be null")
         }
         const drug = await this.drugRepository.findOneBy({
-          id: createProductDto.drugId
+          id: createProductDto.drug_id
         })
         const presentation = await this.presentationRepository.findOneBy({
-          id: createProductDto.presentationId
+          id: createProductDto.presentation_id
         })
         if(!drug || !presentation){
-          throw new NotFoundException("Error creating Product. None of these entities were found, presentation, laboratory and drug.")
+          throw new NotFoundException("Error creating Product. None of these entities were found, presentation and drug.")
         }
         product.presentation = presentation
         product.drug = drug
       }
        const brand = await this.brandRepository.findOneBy({
-        id: createProductDto.brandId
+        id: createProductDto.brand_id
       })
 
       const type = await this.typeRepository.findOneBy({
-        id: createProductDto.typeId
+        id: createProductDto.type_id
       })
 
       if(!brand || !type){
@@ -123,14 +123,14 @@ export class ProductService {
         } });
 
         if(product.is_medicine){
-          if(!updateProductDto.drugId || !updateProductDto.laboratoryId || !updateProductDto.presentationId){
-            throw new NotFoundException("Error update Product. presentation, laboratory and drug cannot be null")
+          if(!updateProductDto.drug_id || !updateProductDto.presentation_id){
+            throw new NotFoundException("Error update Product. presentation and drug cannot be null")
           }
           const drug = await this.drugRepository.findOneBy({
-            id: updateProductDto.drugId
+            id: updateProductDto.drug_id
           })
           const presentation = await this.presentationRepository.findOneBy({
-            id: updateProductDto.presentationId
+            id: updateProductDto.presentation_id
           })
           if(!drug ||  !presentation){
             throw new NotFoundException("Error update Product. None of these entities were found, presentation, laboratory and drug.")
@@ -146,9 +146,9 @@ export class ProductService {
       product.is_medicine = updateProductDto.is_medicine
       product.is_fractionable = updateProductDto.is_fractionable
     
-      if(updateProductDto.brandId){
+      if(updateProductDto.brand_id){
         const brand = await this.brandRepository.findOneBy({
-           id: updateProductDto.brandId
+           id: updateProductDto.brand_id
         })
         if(!brand){
           throw new NotFoundException("Error update Product. None of these entities were found, brand.")

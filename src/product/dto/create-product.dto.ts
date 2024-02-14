@@ -25,7 +25,7 @@ export class CreateProductDto {
 
     @IsNumber()
     @IsOptional()
-    drugId: number
+    drug_id: number
 
     @IsNumber()
     @IsOptional()
@@ -33,13 +33,13 @@ export class CreateProductDto {
 
     @IsNumber()
     @IsOptional()
-    presentationId: number
+    presentation_id: number
 
     @IsNumber()
     @IsOptional()
-    brandId: number
+    brand_id: number
 
     @IsNumber()
     @IsOptional()
-    typeId: number
+    type_id: number
 }

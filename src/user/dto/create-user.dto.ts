@@ -8,5 +8,5 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
   @IsNumber()
-  roleId: number;
+  role_id: number;
 }
