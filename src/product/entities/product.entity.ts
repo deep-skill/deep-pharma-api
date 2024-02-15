@@ -40,7 +40,7 @@ export class Product {
     @JoinColumn({ name: 'brand_id' })
     brand?: Brand
 
-    @ManyToOne(() => Type, lot => lot.products)
+    @ManyToOne(() => Type, type => type.products)
     @JoinColumn({ name: 'type_id' })
     type: Type
 

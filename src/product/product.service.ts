@@ -35,8 +35,7 @@ export class ProductService {
   async create(createProductDto: CreateProductDto) {
     try {
       const product = await this.productRepository.create(createProductDto);
-      await this.productRepository.save(product);
-      const price = await this.priceRepository.create(  { price: createProductDto.new_price , date_time: new Date() , product_id: product} );
+      
       
       if(createProductDto.type_id=== 1){
         if(!createProductDto.drug_id ||  !createProductDto.presentation_id){
@@ -65,12 +64,15 @@ export class ProductService {
       if(!brand || !type){
         throw new NotFoundException("Error creating Product. None of these entities were found, brand and type.")
       }
-      await this.priceRepository.save(price);
-
-      product.price = price
+      
       product.brand = brand
       product.type = type
 
+      await this.productRepository.save(product);
+      const price = await this.priceRepository.create(  { price: createProductDto.new_price , date_time: new Date() , product_id: product} );
+      await this.priceRepository.save(price);
+
+      product.price = price
       await this.productRepository.save(product);
       return product;
 
