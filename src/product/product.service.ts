@@ -86,7 +86,10 @@ export class ProductService {
           relations: {
             drug: true,
             presentation: true,
-            brand: true
+            brand: true,
+            type: true,
+            lots: true,
+            price: true
           }
         }
       );
