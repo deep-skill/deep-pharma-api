@@ -8,7 +8,7 @@ export class CreateProductDto {
     description: string
 
     @IsNumber()
-    price: number
+    new_price: number
 
     @IsBoolean()
     prescription_required: boolean

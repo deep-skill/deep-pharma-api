@@ -8,6 +8,7 @@ import { Drug } from 'src/drug/entities/drug.entity';
 import { Presentation } from 'src/presentation/entities/presentation.entity';
 import { Brand } from 'src/brand/entities/brand.entity';
 import { Type } from 'src/type/entities/type.entity';
+import { PriceProductRecommended } from 'src/price_product_recommended/entities/price_product_recommended.entity';
 
 @Injectable()
 export class ProductService {
@@ -27,12 +28,16 @@ export class ProductService {
 
     @InjectRepository( Type )
     private readonly typeRepository: Repository<Type>,
+   
+    @InjectRepository( PriceProductRecommended )
+    private readonly priceRepository: Repository<PriceProductRecommended>,
   ) {}
   async create(createProductDto: CreateProductDto) {
     try {
-      const product = this.productRepository.create(createProductDto);
-
-      if(product.type.name === "Medicamento"){
+      const product = await this.productRepository.create(createProductDto);
+      const price = await this.priceRepository.create(  { price: createProductDto.new_price , date_time: new Date()} );
+      
+      if(createProductDto.type_id=== 1){
         if(!createProductDto.drug_id ||  !createProductDto.presentation_id){
           throw new NotFoundException("Error creating Product. presentation and drug cannot be null")
         }
@@ -59,7 +64,9 @@ export class ProductService {
       if(!brand || !type){
         throw new NotFoundException("Error creating Product. None of these entities were found, brand and type.")
       }
+      await this.priceRepository.save(price);
 
+      product.price = price
       product.brand = brand
       product.type = type
 
@@ -140,7 +147,6 @@ export class ProductService {
     } 
       product.name = updateProductDto.name
       product.description = updateProductDto.description
-      product.price = updateProductDto.price
       product.prescription_required = updateProductDto.prescription_required
       product.is_fractionable = updateProductDto.is_fractionable
     

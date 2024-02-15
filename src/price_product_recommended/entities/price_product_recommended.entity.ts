@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Product } from "src/product/entities/product.entity";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class PriceProductRecommended {
@@ -10,4 +11,8 @@ export class PriceProductRecommended {
 
     @Column('date')
     date_time: Date
+
+    @OneToOne(() => Product, (product) => product.price)
+    @JoinColumn({ name: 'product_id' })
+    product_id: Product
 }

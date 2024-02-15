@@ -16,9 +16,6 @@ export class Product {
 
     @Column('text')
     description: string;
-
-    @Column('float')
-    price: number;
     
     @Column('boolean')
     prescription_required: boolean;
@@ -28,8 +25,8 @@ export class Product {
     is_fractionable: boolean;
 
     @OneToOne(() => PriceProductRecommended)
-    @JoinColumn()
-    price_id: PriceProductRecommended
+    @JoinColumn({ name: 'price_id' })
+    price: PriceProductRecommended
 
     @ManyToOne(() => Drug, { nullable: true })
     @JoinColumn({ name: 'drug_id' })
