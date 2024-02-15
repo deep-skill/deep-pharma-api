@@ -8,6 +8,7 @@ import { Drug } from 'src/drug/entities/drug.entity';
 import { Presentation } from 'src/presentation/entities/presentation.entity';
 import { Brand } from 'src/brand/entities/brand.entity';
 import { Type } from 'src/type/entities/type.entity';
+import { PriceProductRecommended } from 'src/price_product_recommended/entities/price_product_recommended.entity';
 
 @Injectable()
 export class ProductService {
@@ -27,12 +28,16 @@ export class ProductService {
 
     @InjectRepository( Type )
     private readonly typeRepository: Repository<Type>,
+   
+    @InjectRepository( PriceProductRecommended )
+    private readonly priceRepository: Repository<PriceProductRecommended>,
   ) {}
   async create(createProductDto: CreateProductDto) {
     try {
-      const product = this.productRepository.create(createProductDto);
-
-      if(product.is_medicine){
+      const product = await this.productRepository.create(createProductDto);
+      
+      
+      if(createProductDto.type_id=== 1){
         if(!createProductDto.drug_id ||  !createProductDto.presentation_id){
           throw new NotFoundException("Error creating Product. presentation and drug cannot be null")
         }
@@ -59,10 +64,15 @@ export class ProductService {
       if(!brand || !type){
         throw new NotFoundException("Error creating Product. None of these entities were found, brand and type.")
       }
-
+      
       product.brand = brand
       product.type = type
 
+      await this.productRepository.save(product);
+      const price = await this.priceRepository.create(  { price: createProductDto.new_price , date_time: new Date() , product_id: product} );
+      await this.priceRepository.save(price);
+
+      product.price = price
       await this.productRepository.save(product);
       return product;
 
@@ -79,7 +89,10 @@ export class ProductService {
           relations: {
             drug: true,
             presentation: true,
-            brand: true
+            brand: true,
+            type: true,
+            lots: true,
+            price: true
           }
         }
       );
@@ -99,7 +112,9 @@ export class ProductService {
           drug: true,
           presentation: true,
           brand: true ,
-          lots: true
+          lots: true,
+          price: true,
+          type: true
         } });
         if(!product){
           throw new NotFoundException(`Error Get product by id ${id}`)
@@ -119,10 +134,14 @@ export class ProductService {
         relations: { 
           drug: true,
           presentation: true,
-          brand: true 
+          brand: true,
+          type: true,
+          price: true 
         } });
 
-        if(product.is_medicine){
+        const price = await this.priceRepository.create(  { price: updateProductDto.new_price , date_time: new Date(), product_id: product} );
+        console.log(price)
+        if(updateProductDto.type_id=== 1){
           if(!updateProductDto.drug_id || !updateProductDto.presentation_id){
             throw new NotFoundException("Error update Product. presentation and drug cannot be null")
           }
@@ -140,10 +159,7 @@ export class ProductService {
     } 
       product.name = updateProductDto.name
       product.description = updateProductDto.description
-      product.additional_info = updateProductDto.additional_info
-      product.price = updateProductDto.price
       product.prescription_required = updateProductDto.prescription_required
-      product.is_medicine = updateProductDto.is_medicine
       product.is_fractionable = updateProductDto.is_fractionable
     
       if(updateProductDto.brand_id){
@@ -155,6 +171,10 @@ export class ProductService {
         }
         product.brand = brand
       }
+      await this.priceRepository.save(price);
+
+      product.price = price
+  
       await this.productRepository.save(product);
     return product
   }

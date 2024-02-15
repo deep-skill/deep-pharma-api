@@ -2,8 +2,9 @@ import { Brand } from "src/brand/entities/brand.entity";
 import { Drug } from "src/drug/entities/drug.entity";
 import { Lot } from "src/lot/entities/lot.entity";
 import { Presentation } from "src/presentation/entities/presentation.entity";
+import { PriceProductRecommended } from "src/price_product_recommended/entities/price_product_recommended.entity";
 import { Type } from "src/type/entities/type.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Product {
@@ -15,23 +16,17 @@ export class Product {
 
     @Column('text')
     description: string;
-
-    @Column('text', { 
-        nullable: true 
-    })
-    additional_info: string;
-
-    @Column('float')
-    price: number;
     
     @Column('boolean')
     prescription_required: boolean;
 
-    @Column('boolean')
-    is_medicine: boolean;
 
     @Column('boolean')
     is_fractionable: boolean;
+
+    @OneToOne(() => PriceProductRecommended)
+    @JoinColumn({ name: 'price_id' })
+    price: PriceProductRecommended
 
     @ManyToOne(() => Drug, { nullable: true })
     @JoinColumn({ name: 'drug_id' })
@@ -45,7 +40,7 @@ export class Product {
     @JoinColumn({ name: 'brand_id' })
     brand?: Brand
 
-    @ManyToOne(() => Type, lot => lot.products)
+    @ManyToOne(() => Type, type => type.products)
     @JoinColumn({ name: 'type_id' })
     type: Type
 

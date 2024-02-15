@@ -7,18 +7,11 @@ export class CreateProductDto {
     @IsString()
     description: string
 
-    @IsString()
-    @IsOptional()
-    additional_info: string
-
     @IsNumber()
-    price: number
+    new_price: number
 
     @IsBoolean()
     prescription_required: boolean
-
-    @IsBoolean()
-    is_medicine: boolean
 
     @IsBoolean()
     is_fractionable: boolean
@@ -26,10 +19,6 @@ export class CreateProductDto {
     @IsNumber()
     @IsOptional()
     drug_id: number
-
-    @IsNumber()
-    @IsOptional()
-    laboratoryId: number
 
     @IsNumber()
     @IsOptional()

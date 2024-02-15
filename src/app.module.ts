@@ -15,6 +15,7 @@ import { CustomerModule } from './customer/customer.module';
 import { UserModule } from './user/user.module';
 import { RoleModule } from './role/role.module';
 import { TypeModule } from './type/type.module';
+import { PriceProductRecommendedModule } from './price_product_recommended/price_product_recommended.module';
 
 @Module({
   imports: [
@@ -40,7 +41,8 @@ import { TypeModule } from './type/type.module';
     CustomerModule,
     UserModule,
     RoleModule,
-    TypeModule
+    TypeModule,
+    PriceProductRecommendedModule
   ],
   controllers: [AppController],
   providers: [AppService],
