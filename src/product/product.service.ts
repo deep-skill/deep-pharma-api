@@ -35,7 +35,8 @@ export class ProductService {
   async create(createProductDto: CreateProductDto) {
     try {
       const product = await this.productRepository.create(createProductDto);
-      const price = await this.priceRepository.create(  { price: createProductDto.new_price , date_time: new Date()} );
+      await this.productRepository.save(product);
+      const price = await this.priceRepository.create(  { price: createProductDto.new_price , date_time: new Date() , product_id: product} );
       
       if(createProductDto.type_id=== 1){
         if(!createProductDto.drug_id ||  !createProductDto.presentation_id){
@@ -109,7 +110,9 @@ export class ProductService {
           drug: true,
           presentation: true,
           brand: true ,
-          lots: true
+          lots: true,
+          price: true,
+          type: true
         } });
         if(!product){
           throw new NotFoundException(`Error Get product by id ${id}`)
@@ -129,10 +132,14 @@ export class ProductService {
         relations: { 
           drug: true,
           presentation: true,
-          brand: true 
+          brand: true,
+          type: true,
+          price: true 
         } });
 
-        if(product.type.name === "Medicamento"){
+        const price = await this.priceRepository.create(  { price: updateProductDto.new_price , date_time: new Date(), product_id: product} );
+        console.log(price)
+        if(updateProductDto.type_id=== 1){
           if(!updateProductDto.drug_id || !updateProductDto.presentation_id){
             throw new NotFoundException("Error update Product. presentation and drug cannot be null")
           }
@@ -162,6 +169,10 @@ export class ProductService {
         }
         product.brand = brand
       }
+      await this.priceRepository.save(price);
+
+      product.price = price
+  
       await this.productRepository.save(product);
     return product
   }
