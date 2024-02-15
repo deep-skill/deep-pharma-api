@@ -25,7 +25,13 @@ export class PriceProductRecommendedService {
 
   async findAll() {
     try {
-      const prices = await this.priceRepository.find();
+      const prices = await this.priceRepository.find(
+        {
+          relations: {
+            products: true
+          }
+        }
+      );
       return prices;
     } catch (error) {
       console.log(error)
@@ -35,7 +41,12 @@ export class PriceProductRecommendedService {
 
   async findOne(id: number) {
     try {
-      const price = await this.priceRepository.findOne({ where: { id } });
+      const price = await this.priceRepository.findOne({ 
+        where: { id },
+        relations: {
+          products: true
+        }
+      });
       if (!price) {
         throw new NotFoundException(`Error Get brands by id ${id}`)
       }

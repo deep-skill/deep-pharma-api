@@ -69,7 +69,7 @@ export class ProductService {
       product.type = type
 
       await this.productRepository.save(product);
-      const price = await this.priceRepository.create(  { price: createProductDto.new_price , date_time: new Date() , product_id: product} );
+      const price = await this.priceRepository.create(  { price: createProductDto.new_price , date_time: new Date() , products: product} );
       await this.priceRepository.save(price);
 
       product.price = price
@@ -139,7 +139,7 @@ export class ProductService {
           price: true 
         } });
 
-        const price = await this.priceRepository.create(  { price: updateProductDto.new_price , date_time: new Date(), product_id: product} );
+        const price = await this.priceRepository.create(  { price: updateProductDto.new_price , date_time: new Date(), products: product} );
         console.log(price)
         if(updateProductDto.type_id=== 1){
           if(!updateProductDto.drug_id || !updateProductDto.presentation_id){
