@@ -32,7 +32,7 @@ export class ProductService {
     try {
       const product = this.productRepository.create(createProductDto);
 
-      if(product.is_medicine){
+      if(product.type.name === "Medicamento"){
         if(!createProductDto.drug_id ||  !createProductDto.presentation_id){
           throw new NotFoundException("Error creating Product. presentation and drug cannot be null")
         }
@@ -122,7 +122,7 @@ export class ProductService {
           brand: true 
         } });
 
-        if(product.is_medicine){
+        if(product.type.name === "Medicamento"){
           if(!updateProductDto.drug_id || !updateProductDto.presentation_id){
             throw new NotFoundException("Error update Product. presentation and drug cannot be null")
           }
@@ -140,10 +140,8 @@ export class ProductService {
     } 
       product.name = updateProductDto.name
       product.description = updateProductDto.description
-      product.additional_info = updateProductDto.additional_info
       product.price = updateProductDto.price
       product.prescription_required = updateProductDto.prescription_required
-      product.is_medicine = updateProductDto.is_medicine
       product.is_fractionable = updateProductDto.is_fractionable
     
       if(updateProductDto.brand_id){

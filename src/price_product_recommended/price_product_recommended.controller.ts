@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { PriceProductRecommendedService } from './price_product_recommended.service';
 import { CreatePriceProductRecommendedDto } from './dto/create-price_product_recommended.dto';
 import { UpdatePriceProductRecommendedDto } from './dto/update-price_product_recommended.dto';
@@ -18,8 +18,8 @@ export class PriceProductRecommendedController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.priceProductRecommendedService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe ) id: number) {
+    return this.priceProductRecommendedService.findOne(id);
   }
 
   @Patch(':id')

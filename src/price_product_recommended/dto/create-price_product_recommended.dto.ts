@@ -1,9 +1,9 @@
-import { IsDate, IsNumber } from "class-validator";
+import { IsDateString, IsNumber } from "class-validator";
 
 export class CreatePriceProductRecommendedDto {
     @IsNumber()
     price: number;
 
-    @IsDate()
+    @IsDateString()
     date_time: Date
 }
