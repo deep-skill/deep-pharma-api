@@ -9,4 +9,7 @@ export class CreateDrugDto {
     @Length(3, 100, { message: 'Therapeutic function must be between 3 and 100 characters' })
     therapeutic_function: string;
 
+    @IsString()
+    @Length(3, 100, { message: 'Concentracion function must be between 3 and 100 characters' })
+    concentration: string;
 }

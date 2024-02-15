@@ -6,6 +6,6 @@ export class CreatePresentationDto {
     name: string;
 
     @IsNumber()
-    factor: number;
+    quantity: number;
 
 }
