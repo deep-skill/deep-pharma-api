@@ -8,4 +8,7 @@ export class CreatePresentationDto {
     @IsNumber()
     quantity: number;
 
+    @IsNumber()
+    created_by: number
+
 }
