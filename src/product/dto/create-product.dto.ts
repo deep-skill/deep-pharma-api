@@ -17,6 +17,9 @@ export class CreateProductDto {
     is_fractionable: boolean
 
     @IsNumber()
+    created_by: number
+
+    @IsNumber()
     @IsOptional()
     drug_id: number
 

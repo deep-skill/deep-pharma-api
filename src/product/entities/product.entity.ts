@@ -1,4 +1,5 @@
 import { Brand } from "src/brand/entities/brand.entity";
+import { ClassGlobal } from "src/class_global/class_global.entity";
 import { Drug } from "src/drug/entities/drug.entity";
 import { Lot } from "src/lot/entities/lot.entity";
 import { Presentation } from "src/presentation/entities/presentation.entity";
@@ -7,7 +8,7 @@ import { Type } from "src/type/entities/type.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Product {
+export class Product extends ClassGlobal {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
