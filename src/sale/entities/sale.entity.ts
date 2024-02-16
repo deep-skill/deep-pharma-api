@@ -1,9 +1,10 @@
+import { ClassGlobal } from "src/class_global/class_global.entity";
 import { Lot } from "src/lot/entities/lot.entity";
 import { User } from "src/user/entities/user.entity";
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Sale {
+export class Sale extends ClassGlobal {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
