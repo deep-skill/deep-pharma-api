@@ -156,6 +156,7 @@ export class ProductService {
           product.presentation = presentation
           product.drug = drug 
     } 
+      product.updated_by = updateProductDto.updated_by
       product.name = updateProductDto.name
       product.description = updateProductDto.description
       product.prescription_required = updateProductDto.prescription_required

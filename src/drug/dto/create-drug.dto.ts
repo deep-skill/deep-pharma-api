@@ -1,4 +1,4 @@
-import { IsString, Length } from "class-validator";
+import { IsNumber, IsString, Length } from "class-validator";
 
 export class CreateDrugDto {
     @IsString()
@@ -12,4 +12,7 @@ export class CreateDrugDto {
     @IsString()
     @Length(3, 100, { message: 'Concentracion function must be between 3 and 100 characters' })
     concentration: string;
+
+    @IsNumber()
+    created_by: number
 }

@@ -1,4 +1,5 @@
 import {
+  IsNumber,
   IsNumberString,
   IsString,
   MaxLength,
@@ -15,4 +16,7 @@ export class CreateCustomerDto {
   @MinLength(6)
   @MaxLength(11)
   phone_number: number;
+
+  @IsNumber()
+  created_by: number
 }

@@ -7,6 +7,9 @@ export class CreateSaleDto {
     @IsNumber()
     total: number;
 
+    @IsNumber()
+    created_by: number
+
     @IsString()
     sale_type: string;
 

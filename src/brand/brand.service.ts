@@ -14,6 +14,7 @@ export class BrandService {
   ) {}
   async create(createBrandDto: CreateBrandDto) {
     try {
+      
       const brand = this.brandRepository.create( createBrandDto );
       await this.brandRepository.save( brand );
       return brand;
@@ -52,6 +53,7 @@ export class BrandService {
       if (!brand) {
         throw new NotFoundException(`Error Get brands by id ${id}`)
       }
+      
       await this.brandRepository.update(id, updateBrandDto);
       return true;
     } catch (error) {
