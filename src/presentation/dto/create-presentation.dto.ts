@@ -6,9 +6,6 @@ export class CreatePresentationDto {
     name: string;
 
     @IsNumber()
-    factor: number;
+    quantity: number;
 
-    @IsString()
-    @Length(3, 100, { message: 'Name must be between 3 and 100 characters' })
-    concentration: string;
 }

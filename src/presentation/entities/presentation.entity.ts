@@ -12,10 +12,7 @@ export class Presentation {
     name: string;
 
     @Column('int')
-    factor: number;
-
-    @Column('text')
-    concentration: string 
+    quantity: number;
 
     @OneToMany(() => Product, product => product.presentation)
     products: Product[]

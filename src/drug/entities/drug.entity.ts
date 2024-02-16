@@ -12,6 +12,9 @@ export class Drug {
     @Column('text')
     therapeutic_function: string;
 
+    @Column('text')
+    concentration: string;
+
     @OneToMany(() => Product, product => product.drug)
     products: Product[]
 }

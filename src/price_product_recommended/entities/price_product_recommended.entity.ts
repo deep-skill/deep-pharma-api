@@ -14,5 +14,5 @@ export class PriceProductRecommended {
 
     @ManyToOne(() => Product, (product) => product.price)
     @JoinColumn({ name: 'product_id' })
-    product_id: Product
+    products: Product
 }

@@ -19,6 +19,9 @@ export class Lot {
     @Column('bool')
     lot_state: boolean;
 
+    @Column('float')
+    cost_price: number;
+
     @ManyToOne(() => Supplier, (supplier) => supplier.lots)
     @JoinColumn({ name: 'supplier_id' })
     supplier: Supplier
