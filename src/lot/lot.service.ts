@@ -98,6 +98,7 @@ export class LotService {
       }
       lot.supplier = supplier
       lot.product = product
+      lot.updated_by = updateLotDto.updated_by
       lot.initial_stock = updateLotDto.initial_stock
       lot.updated_stock = updateLotDto.updated_stock
       lot.expiration = updateLotDto.expiration

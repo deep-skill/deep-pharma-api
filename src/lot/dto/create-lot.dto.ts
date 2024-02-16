@@ -17,6 +17,9 @@ export class CreateLotDto {
     cost_price: number;
 
     @IsNumber()
+    created_by: number
+
+    @IsNumber()
     supplier_id: number;
 
     @IsNumber()

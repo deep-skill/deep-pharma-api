@@ -1,9 +1,10 @@
+import { ClassGlobal } from "src/class_global/class_global.entity";
 import { Product } from "src/product/entities/product.entity";
 import { Supplier } from "src/supplier/entities/supplier.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Lot {
+export class Lot extends ClassGlobal {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
