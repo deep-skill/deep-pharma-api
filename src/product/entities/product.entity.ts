@@ -1,10 +1,10 @@
 import { Brand } from "src/brand/entities/brand.entity";
+import { Category } from "src/category/entities/category.entity";
 import { ClassGlobal } from "src/class_global/class_global.entity";
 import { Drug } from "src/drug/entities/drug.entity";
 import { Lot } from "src/lot/entities/lot.entity";
 import { Presentation } from "src/presentation/entities/presentation.entity";
 import { PriceProductRecommended } from "src/price_product_recommended/entities/price_product_recommended.entity";
-import { Type } from "src/type/entities/type.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
@@ -41,9 +41,9 @@ export class Product extends ClassGlobal {
     @JoinColumn({ name: 'brand_id' })
     brand?: Brand
 
-    @ManyToOne(() => Type, type => type.products)
-    @JoinColumn({ name: 'type_id' })
-    type: Type
+    @ManyToOne(() => Category, category => category.products)
+    @JoinColumn({ name: 'category_id' })
+    category: Category
 
     @OneToMany(() => Lot, lot => lot.product)
     lots: Lot[]
