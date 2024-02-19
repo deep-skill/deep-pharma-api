@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { SaleLotService } from './sale_lot.service';
 import { CreateSaleLotDto } from './dto/create-sale_lot.dto';
 import { UpdateSaleLotDto } from './dto/update-sale_lot.dto';
@@ -18,17 +18,17 @@ export class SaleLotController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.saleLotService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.saleLotService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSaleLotDto: UpdateSaleLotDto) {
-    return this.saleLotService.update(+id, updateSaleLotDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateSaleLotDto: UpdateSaleLotDto) {
+    return this.saleLotService.update(id, updateSaleLotDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.saleLotService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.saleLotService.remove(id);
   }
 }

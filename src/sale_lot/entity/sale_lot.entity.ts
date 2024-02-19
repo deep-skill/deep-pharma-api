@@ -8,6 +8,12 @@ export class SaleLot extends ClassGlobal {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
+  @Column('float')
+  price: number;
+
+  @Column('integer')
+  quantity: number;
+
   @ManyToOne(() => Sale, (sale) => sale.saleLots)
   @JoinColumn({ name: 'sale_id' })
   sale: Sale;
@@ -15,10 +21,4 @@ export class SaleLot extends ClassGlobal {
   @ManyToOne(() => Lot, (lot) => lot.saleLots)
   @JoinColumn({ name: 'lot_id' })
   lot: Lot;
-
-  @Column('float')
-  price: number;
-
-  @Column('integer')
-  quantity: number;
 }

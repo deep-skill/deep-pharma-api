@@ -22,7 +22,6 @@ export class Sale extends ClassGlobal {
     @JoinColumn({ name: 'user_id' })
     user: User
 
-
     @OneToMany(() => SaleLot, (saleLot) => saleLot.sale)
     saleLots: SaleLot[];
 

@@ -15,8 +15,6 @@ export class SaleService {
     private readonly saleRepository: Repository<Sale>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @InjectRepository(SaleLot)
-    private readonly saleLotRepository: Repository<SaleLot>,
 
   ) {}
   async create(createSaleDto: CreateSaleDto) {
