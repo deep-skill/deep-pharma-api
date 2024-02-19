@@ -10,6 +10,9 @@ export class Category  extends ClassGlobal {
     @Column('text')
     name: string;
 
+    @Column('text')
+    icon: string;
+
     @OneToMany(() => Product, product => product.category)
     products: Product[]
 }

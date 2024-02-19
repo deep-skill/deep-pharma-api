@@ -5,6 +5,9 @@ export class CreateCategoryDto {
     @Length(3, 20)
     name: string
 
+    @IsString()
+    icon: string
+
     @IsNumber()
     created_by: number
 }
