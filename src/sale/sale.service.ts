@@ -23,7 +23,9 @@ export class SaleService {
       sale.user = await this.userRepository.findOneBy({
         id: createSaleDto.user_id
       });
-
+      if(!sale){
+        throw new NotFoundException(`Error Get user by id ${createSaleDto.user_id}`)
+      }
 
       await this.saleRepository.save(sale);
       return sale;
