@@ -19,7 +19,7 @@ export class CreateSaleLotDto extends ClassGlobal{
     array_lot: lots[]
 }
 
-export class lots {
+export class lots{
 
     @IsNumber()
     id: number
