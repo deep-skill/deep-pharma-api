@@ -36,7 +36,14 @@ export class SaleService {
 
   async findAll() {
     try {
-      const sales = await this.saleRepository.find();
+      const sales = await this.saleRepository.find(
+        {
+          relations: {
+            user: true,
+            saleLots: true
+          }
+        }
+      );
       return sales;
     } catch (error) {
       console.log(error)
@@ -46,7 +53,13 @@ export class SaleService {
 
   async findOne(id: number) {
     try {
-      const sale = await this.saleRepository.findOne({ where: { id } });
+      const sale = await this.saleRepository.findOne({ 
+        where: { id },
+        relations: {
+          user: true,
+          saleLots: true
+        }
+      });
       if (!sale) {
         throw new NotFoundException(`Error Get sales by id ${id}`)
       }
