@@ -1,7 +1,8 @@
 import { ClassGlobal } from "src/class_global/class_global.entity";
 import { Lot } from "src/lot/entities/lot.entity";
+import { SaleLot } from "src/sale_lot/entity/sale_lot.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Sale extends ClassGlobal {
@@ -21,20 +22,8 @@ export class Sale extends ClassGlobal {
     @JoinColumn({ name: 'user_id' })
     user: User
 
-    @ManyToMany(() => Lot)
-    @JoinTable(
-        {
-            name: 'sale_lots_lot',
-            joinColumn: {
-                name: 'sale_id',
-                referencedColumnName: 'id'
-            },
-            inverseJoinColumn: {
-                name: 'lot_id',
-                referencedColumnName: 'id'
-            }
-        }
-    )
-    lots: Lot[]
+
+    @OneToMany(() => SaleLot, (saleLot) => saleLot.sale)
+    saleLots: SaleLot[];
 
 }

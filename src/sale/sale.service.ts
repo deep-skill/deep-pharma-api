@@ -2,10 +2,10 @@ import { Injectable, InternalServerErrorException, NotFoundException } from '@ne
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { UpdateSaleDto } from './dto/update-sale.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MoreThanOrEqual, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Sale } from './entities/sale.entity';
 import { User } from 'src/user/entities/user.entity';
-import { Lot } from 'src/lot/entities/lot.entity';
+import { SaleLot } from 'src/sale_lot/entity/sale_lot.entity';
 
 @Injectable()
 export class SaleService {
@@ -15,9 +15,10 @@ export class SaleService {
     private readonly saleRepository: Repository<Sale>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @InjectRepository(Lot)
-    private readonly lotRepository: Repository<Lot>
-  ) { }
+    @InjectRepository(SaleLot)
+    private readonly saleLotRepository: Repository<SaleLot>,
+
+  ) {}
   async create(createSaleDto: CreateSaleDto) {
     try {
       const sale = this.saleRepository.create(createSaleDto);
@@ -25,33 +26,6 @@ export class SaleService {
         id: createSaleDto.user_id
       });
 
-      const lots = createSaleDto.lots_array.map(async (lot) => {
-        
-        const getLotId = await this.lotRepository.findOneBy({
-          id: lot.lot_id,
-          lot_state: true,
-          updated_stock: MoreThanOrEqual(lot.quantity)
-        });
-
-        if(!getLotId){
-          throw new NotFoundException(`Error Get lot by id ${lot.lot_id}`)
-        }
-        return getLotId
-      });
-
-      const getLots = await Promise.all(lots);
-
-      getLots.forEach( async lot => {
-        lot.updated_stock  =  lot.updated_stock - createSaleDto.lots_array[getLots.indexOf(lot)].quantity
-    
-       
-        if(lot.updated_stock === 0){
-          lot.lot_state = false
-        }
-        await this.lotRepository.save(lot);
-       }) 
-
-      sale.lots = getLots
 
       await this.saleRepository.save(sale);
       return sale;

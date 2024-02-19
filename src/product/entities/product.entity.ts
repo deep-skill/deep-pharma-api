@@ -45,6 +45,7 @@ export class Product extends ClassGlobal {
     @JoinColumn({ name: 'category_id' })
     category: Category
 
+
     @OneToMany(() => Lot, lot => lot.product)
     lots: Lot[]
 }
