@@ -51,7 +51,7 @@ export class SaleLotService {
       });
       
       const getLots = await Promise.all(lots);
-      getLots.forEach( async lot => {
+      getLots.forEach( async (lot , index) => {
         lot.updated_stock  =  lot.updated_stock - createSaleLotDto.array_lot[getLots.indexOf(lot)].stock_quantity
         const saleLot = this.saleLotRepository.create({
           price: createSaleLotDto.sale_price,
@@ -62,7 +62,10 @@ export class SaleLotService {
         if(lot.updated_stock === 0){
           lot.lot_state = false
         }
-        await this.saleRepository.save(sale);
+        if(index === 0){
+          await this.saleRepository.save(sale);
+        }
+        
         saleLot.sale = sale
 
         await this.lotRepository.save(lot);
