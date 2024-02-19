@@ -4,6 +4,9 @@ import { CreateSaleDto } from "src/sale/dto/create-sale.dto";
 
 export class CreateSaleLotDto extends ClassGlobal{
     @IsNumber()
+    created_by: number;
+
+    @IsNumber()
     sale_price: number
 
     @IsNumber()
