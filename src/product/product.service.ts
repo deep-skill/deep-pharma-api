@@ -7,8 +7,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Drug } from 'src/drug/entities/drug.entity';
 import { Presentation } from 'src/presentation/entities/presentation.entity';
 import { Brand } from 'src/brand/entities/brand.entity';
-import { Type } from 'src/type/entities/type.entity';
-import { PriceProductRecommended } from 'src/price_product_recommended/entities/price_product_recommended.entity';
+import { Category } from 'src/category/entities/category.entity';
+import { SuggestedPrice } from 'src/suggested_price/entities/suggested_price.entity';
 
 @Injectable()
 export class ProductService {
@@ -26,18 +26,18 @@ export class ProductService {
     @InjectRepository( Brand )
     private readonly brandRepository: Repository<Brand>,
 
-    @InjectRepository( Type )
-    private readonly typeRepository: Repository<Type>,
+    @InjectRepository( Category )
+    private readonly categoryRepository: Repository<Category>,
    
-    @InjectRepository( PriceProductRecommended )
-    private readonly priceRepository: Repository<PriceProductRecommended>,
+    @InjectRepository( SuggestedPrice )
+    private readonly priceRepository: Repository<SuggestedPrice>,
   ) {}
   async create(createProductDto: CreateProductDto) {
     try {
       const product = await this.productRepository.create(createProductDto);
       
       
-      if(createProductDto.type_id=== 1){
+      if(createProductDto.category_id=== 1){
         if(!createProductDto.drug_id ||  !createProductDto.presentation_id){
           throw new NotFoundException("Error creating Product. presentation and drug cannot be null")
         }
@@ -57,22 +57,27 @@ export class ProductService {
         id: createProductDto.brand_id
       })
 
-      const type = await this.typeRepository.findOneBy({
-        id: createProductDto.type_id
+      const category = await this.categoryRepository.findOneBy({
+        id: createProductDto.category_id
       })
 
-      if(!brand || !type){
+      if(!brand || !category){
         throw new NotFoundException("Error creating Product. None of these entities were found, brand and type.")
       }
       
       product.brand = brand
-      product.type = type
+      product.category = category
 
       await this.productRepository.save(product);
-      const price = await this.priceRepository.create(  { price: createProductDto.new_price , date_time: new Date() , products: product} );
+      const price = await this.priceRepository.create(  { 
+        price: createProductDto.new_price, 
+        date_time: new Date(), 
+        products: product, 
+        created_by: createProductDto.created_by
+       } );
       await this.priceRepository.save(price);
 
-      product.price = price
+      product.suggested_price = price
       await this.productRepository.save(product);
       return product;
 
@@ -90,9 +95,9 @@ export class ProductService {
             drug: true,
             presentation: true,
             brand: true,
-            type: true,
+            category: true,
             lots: true,
-            price: true
+            suggested_price: true
           }
         }
       );
@@ -113,8 +118,8 @@ export class ProductService {
           presentation: true,
           brand: true ,
           lots: true,
-          price: true,
-          type: true
+          suggested_price: true,
+          category: true
         } });
         if(!product){
           throw new NotFoundException(`Error Get product by id ${id}`)
@@ -135,12 +140,17 @@ export class ProductService {
           drug: true,
           presentation: true,
           brand: true,
-          type: true,
-          price: true 
+          category: true,
+          suggested_price: true 
         } });
 
-        const price = await this.priceRepository.create(  { price: updateProductDto.new_price , date_time: new Date(), products: product} );
-        if(updateProductDto.type_id=== 1){
+        const price = await this.priceRepository.create(  { 
+            price: updateProductDto.new_price, 
+            date_time: new Date(),
+            products: product,
+            created_by: updateProductDto.updated_by
+          } );
+        if(updateProductDto.category_id=== 1){
           if(!updateProductDto.drug_id || !updateProductDto.presentation_id){
             throw new NotFoundException("Error update Product. presentation and drug cannot be null")
           }
@@ -173,7 +183,7 @@ export class ProductService {
       }
       await this.priceRepository.save(price);
 
-      product.price = price
+      product.suggested_price = price
   
       await this.productRepository.save(product);
     return product

@@ -14,8 +14,8 @@ import { SaleModule } from './sale/sale.module';
 import { CustomerModule } from './customer/customer.module';
 import { UserModule } from './user/user.module';
 import { RoleModule } from './role/role.module';
-import { TypeModule } from './type/type.module';
-import { PriceProductRecommendedModule } from './price_product_recommended/price_product_recommended.module';
+import { CategoryModule } from './category/category.module';
+import { SuggestedPriceModule } from './suggested_price/suggested_price.module';
 
 @Module({
   imports: [
@@ -41,8 +41,8 @@ import { PriceProductRecommendedModule } from './price_product_recommended/price
     CustomerModule,
     UserModule,
     RoleModule,
-    TypeModule,
-    PriceProductRecommendedModule
+    CategoryModule,
+    SuggestedPriceModule
   ],
   controllers: [AppController],
   providers: [AppService],

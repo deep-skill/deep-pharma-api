@@ -1,20 +1,21 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { CreatePriceProductRecommendedDto } from './dto/create-price_product_recommended.dto';
-import { UpdatePriceProductRecommendedDto } from './dto/update-price_product_recommended.dto';
-import { PriceProductRecommended } from './entities/price_product_recommended.entity';
+import { CreateSuggestedPriceDto } from './dto/create-suggested_price.dto';
+import { UpdateSuggestedPriceDto } from './dto/update-suggested_price.dto';
+import { SuggestedPrice } from './entities/suggested_price.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class PriceProductRecommendedService {
+export class SuggestedPriceService {
 
   constructor(
-    @InjectRepository( PriceProductRecommended )
-    private readonly priceRepository: Repository<PriceProductRecommended>
+    @InjectRepository( SuggestedPrice )
+    private readonly priceRepository: Repository<SuggestedPrice>
   ) {}
-  async create(createPriceProductRecommendedDto: CreatePriceProductRecommendedDto) {
+
+  async create(createSuggestedPriceDto: CreateSuggestedPriceDto) {
     try {
-      const price = this.priceRepository.create( createPriceProductRecommendedDto );
+      const price = this.priceRepository.create( createSuggestedPriceDto );
       await this.priceRepository.save( price );
       return price;
     } catch (error) {
@@ -57,11 +58,11 @@ export class PriceProductRecommendedService {
     }
   }
 
-  update(id: number, updatePriceProductRecommendedDto: UpdatePriceProductRecommendedDto) {
-    return `This action updates a #${id} priceProductRecommended`;
+  update(id: number, updateSuggestedPriceDto: UpdateSuggestedPriceDto) {
+    return `This action updates a #${id} suggestedPrice`;
   }
 
   remove(id: number) {
-    return `This action removes a #${id} priceProductRecommended`;
+    return `This action removes a #${id} suggestedPrice`;
   }
 }

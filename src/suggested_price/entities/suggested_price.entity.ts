@@ -1,8 +1,9 @@
+import { ClassGlobal } from "src/class_global/class_global.entity";
 import { Product } from "src/product/entities/product.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class PriceProductRecommended {
+export class SuggestedPrice extends ClassGlobal{
     @PrimaryGeneratedColumn('increment')
     id: number;
 
@@ -12,7 +13,7 @@ export class PriceProductRecommended {
     @Column('date')
     date_time: Date
 
-    @ManyToOne(() => Product, (product) => product.price)
+    @ManyToOne(() => Product, (product) => product.suggested_price)
     @JoinColumn({ name: 'product_id' })
     products: Product
 }

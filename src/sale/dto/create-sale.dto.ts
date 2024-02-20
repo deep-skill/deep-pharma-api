@@ -15,17 +15,9 @@ export class CreateSaleDto {
 
     @IsNumber()
     user_id: number;
-
-    @IsArray()
-    lots_array: lots[]
+    
+    @IsNumber()
+    customer_id: number;
 }
 
-export class lots {
-
-    @IsNumber()
-    lot_id: number
-
-    @IsNumber()
-    quantity: number
-}
 

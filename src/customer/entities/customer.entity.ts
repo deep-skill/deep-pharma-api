@@ -1,5 +1,6 @@
 import { ClassGlobal } from "src/class_global/class_global.entity";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Sale } from "src/sale/entities/sale.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Customer extends ClassGlobal {
@@ -11,4 +12,7 @@ export class Customer extends ClassGlobal {
   
   @Column()
   name: string;
+
+  @OneToMany(() => Sale, sale => sale.customer)
+  sale: Sale[]
 }

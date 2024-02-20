@@ -33,5 +33,5 @@ export class CreateProductDto {
 
     @IsNumber()
     @IsOptional()
-    type_id: number
+    category_id: number
 }
