@@ -69,7 +69,7 @@ export class ProductService {
       product.category = category
 
       await this.productRepository.save(product);
-      const price = await this.priceRepository.create(  { price: createProductDto.new_price , date_time: new Date() , products: product} );
+      const price = await this.priceRepository.create(  { price: createProductDto.new_price , date_time: new Date() , products: product, created_by: createProductDto.created_by } );
       await this.priceRepository.save(price);
 
       product.suggested_price = price
