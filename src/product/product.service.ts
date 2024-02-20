@@ -104,9 +104,25 @@ export class ProductService {
     } catch (error) {
       console.log(error)
       throw new InternalServerErrorException(error);
-    }
-    
+    } 
   }
+  
+  async searchByQuery({ query }: { query: string }) {
+    try {
+      const queryBuilder = await this.productRepository.createQueryBuilder('product')
+      .where('product.name ILIKE :query', { query: `%${query}%` })
+      .orWhere('product.description ILIKE :query', { query: `%${query}%` })
+      .orWhere('brand.name ILIKE :query', { query: `%${query}%` });
+
+
+
+    const products = await queryBuilder.getMany();
+    return products;
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException(error);
+    } 
+    } 
   
 
   async findOne(id: number) {
