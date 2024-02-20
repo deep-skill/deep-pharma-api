@@ -148,7 +148,7 @@ export class ProductService {
             price: updateProductDto.new_price, 
             date_time: new Date(),
             products: product,
-            created_by: updateProductDto.created_by
+            created_by: updateProductDto.updated_by
           } );
         if(updateProductDto.category_id=== 1){
           if(!updateProductDto.drug_id || !updateProductDto.presentation_id){
