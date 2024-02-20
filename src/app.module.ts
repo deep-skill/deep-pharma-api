@@ -16,6 +16,7 @@ import { UserModule } from './user/user.module';
 import { RoleModule } from './role/role.module';
 import { PriceProductRecommendedModule } from './price_product_recommended/price_product_recommended.module';
 import { CategoryModule } from './category/category.module';
+import { SuggestedPriceModule } from './suggested_price/suggested_price.module';
 
 @Module({
   imports: [
@@ -42,7 +43,8 @@ import { CategoryModule } from './category/category.module';
     UserModule,
     RoleModule,
     PriceProductRecommendedModule,
-    CategoryModule
+    CategoryModule,
+    SuggestedPriceModule
   ],
   controllers: [AppController],
   providers: [AppService],
