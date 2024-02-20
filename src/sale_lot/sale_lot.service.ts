@@ -68,7 +68,7 @@ export class SaleLotService {
         }
         
         saleLot.sale = sale
-
+        saleLot.created_by = createSaleLotDto.created_by
         await this.lotRepository.save(lot);
         await this.saleLotRepository.save(saleLot);
       
