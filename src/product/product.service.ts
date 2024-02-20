@@ -69,7 +69,12 @@ export class ProductService {
       product.category = category
 
       await this.productRepository.save(product);
-      const price = await this.priceRepository.create(  { price: createProductDto.new_price , date_time: new Date() , products: product, created_by: createProductDto.created_by } );
+      const price = await this.priceRepository.create(  { 
+        price: createProductDto.new_price, 
+        date_time: new Date(), 
+        products: product, 
+        created_by: createProductDto.created_by
+       } );
       await this.priceRepository.save(price);
 
       product.suggested_price = price
@@ -139,7 +144,11 @@ export class ProductService {
           suggested_price: true 
         } });
 
-        const price = await this.priceRepository.create(  { price: updateProductDto.new_price , date_time: new Date(), products: product} );
+        const price = await this.priceRepository.create(  { 
+            price: updateProductDto.new_price, 
+            date_time: new Date(),
+            products: product
+          } );
         if(updateProductDto.category_id=== 1){
           if(!updateProductDto.drug_id || !updateProductDto.presentation_id){
             throw new NotFoundException("Error update Product. presentation and drug cannot be null")
