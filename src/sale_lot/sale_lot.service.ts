@@ -63,6 +63,7 @@ export class SaleLotService {
           lot.lot_state = false
         }
         if(index === 0){
+          sale.user = user
           await this.saleRepository.save(sale);
         }
         
