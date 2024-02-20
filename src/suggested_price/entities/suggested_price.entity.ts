@@ -13,7 +13,7 @@ export class SuggestedPrice extends ClassGlobal{
     @Column('date')
     date_time: Date
 
-    @ManyToOne(() => Product, (product) => product.price)
+    @ManyToOne(() => Product, (product) => product.suggested_price)
     @JoinColumn({ name: 'product_id' })
     products: Product
 }

@@ -3,7 +3,7 @@ import { Lot } from "src/lot/entities/lot.entity";
 import { Sale } from "src/sale/entities/sale.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({ name: 'sale_lots_lot' })
+@Entity({ name: 'sale_lots_lot'})
 export class SaleLot extends ClassGlobal {
   @PrimaryGeneratedColumn('increment')
   id: number;

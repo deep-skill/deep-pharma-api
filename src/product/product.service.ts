@@ -7,8 +7,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Drug } from 'src/drug/entities/drug.entity';
 import { Presentation } from 'src/presentation/entities/presentation.entity';
 import { Brand } from 'src/brand/entities/brand.entity';
-import { PriceProductRecommended } from 'src/price_product_recommended/entities/price_product_recommended.entity';
 import { Category } from 'src/category/entities/category.entity';
+import { SuggestedPrice } from 'src/suggested_price/entities/suggested_price.entity';
 
 @Injectable()
 export class ProductService {
@@ -29,8 +29,8 @@ export class ProductService {
     @InjectRepository( Category )
     private readonly categoryRepository: Repository<Category>,
    
-    @InjectRepository( PriceProductRecommended )
-    private readonly priceRepository: Repository<PriceProductRecommended>,
+    @InjectRepository( SuggestedPrice )
+    private readonly priceRepository: Repository<SuggestedPrice>,
   ) {}
   async create(createProductDto: CreateProductDto) {
     try {
@@ -72,7 +72,7 @@ export class ProductService {
       const price = await this.priceRepository.create(  { price: createProductDto.new_price , date_time: new Date() , products: product} );
       await this.priceRepository.save(price);
 
-      product.price = price
+      product.suggested_price = price
       await this.productRepository.save(product);
       return product;
 
@@ -92,7 +92,7 @@ export class ProductService {
             brand: true,
             category: true,
             lots: true,
-            price: true
+            suggested_price: true
           }
         }
       );
@@ -113,7 +113,7 @@ export class ProductService {
           presentation: true,
           brand: true ,
           lots: true,
-          price: true,
+          suggested_price: true,
           category: true
         } });
         if(!product){
@@ -136,7 +136,7 @@ export class ProductService {
           presentation: true,
           brand: true,
           category: true,
-          price: true 
+          suggested_price: true 
         } });
 
         const price = await this.priceRepository.create(  { price: updateProductDto.new_price , date_time: new Date(), products: product} );
@@ -173,7 +173,7 @@ export class ProductService {
       }
       await this.priceRepository.save(price);
 
-      product.price = price
+      product.suggested_price = price
   
       await this.productRepository.save(product);
     return product

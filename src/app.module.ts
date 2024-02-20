@@ -14,7 +14,6 @@ import { SaleModule } from './sale/sale.module';
 import { CustomerModule } from './customer/customer.module';
 import { UserModule } from './user/user.module';
 import { RoleModule } from './role/role.module';
-import { PriceProductRecommendedModule } from './price_product_recommended/price_product_recommended.module';
 import { CategoryModule } from './category/category.module';
 import { SuggestedPriceModule } from './suggested_price/suggested_price.module';
 
@@ -42,7 +41,6 @@ import { SuggestedPriceModule } from './suggested_price/suggested_price.module';
     CustomerModule,
     UserModule,
     RoleModule,
-    PriceProductRecommendedModule,
     CategoryModule,
     SuggestedPriceModule
   ],

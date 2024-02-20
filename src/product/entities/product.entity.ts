@@ -4,7 +4,7 @@ import { ClassGlobal } from "src/class_global/class_global.entity";
 import { Drug } from "src/drug/entities/drug.entity";
 import { Lot } from "src/lot/entities/lot.entity";
 import { Presentation } from "src/presentation/entities/presentation.entity";
-import { PriceProductRecommended } from "src/price_product_recommended/entities/price_product_recommended.entity";
+import { SuggestedPrice } from "src/suggested_price/entities/suggested_price.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
@@ -25,9 +25,9 @@ export class Product extends ClassGlobal {
     @Column('boolean')
     is_fractionable: boolean;
 
-    @OneToOne(() => PriceProductRecommended)
-    @JoinColumn({ name: 'price_id' })
-    price: PriceProductRecommended
+    @OneToOne(() => SuggestedPrice)
+    @JoinColumn({ name: 'suggested_price_id' })
+    suggested_price: SuggestedPrice
 
     @ManyToOne(() => Drug, { nullable: true })
     @JoinColumn({ name: 'drug_id' })

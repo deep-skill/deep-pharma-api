@@ -6,8 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Drug } from 'src/drug/entities/drug.entity';
 import { Presentation } from 'src/presentation/entities/presentation.entity';
 import { Brand } from 'src/brand/entities/brand.entity';
-import { PriceProductRecommended } from 'src/price_product_recommended/entities/price_product_recommended.entity';
 import { Category } from 'src/category/entities/category.entity';
+import { SuggestedPrice } from 'src/suggested_price/entities/suggested_price.entity';
 
 @Module({
   controllers: [ProductController],
@@ -19,7 +19,7 @@ import { Category } from 'src/category/entities/category.entity';
       Presentation,
       Brand,
       Category,
-      PriceProductRecommended
+      SuggestedPrice
     ]),
   ],
   exports: [
