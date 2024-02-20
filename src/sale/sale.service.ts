@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Sale } from './entities/sale.entity';
 import { User } from 'src/user/entities/user.entity';
+import { Customer } from 'src/customer/entities/customer.entity';
 
 @Injectable()
 export class SaleService {
@@ -12,9 +13,12 @@ export class SaleService {
   constructor(
     @InjectRepository(Sale)
     private readonly saleRepository: Repository<Sale>,
+
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
 
+    @InjectRepository(Customer)
+    private readonly customerRepository: Repository<Customer>,
   ) {}
   async create(createSaleDto: CreateSaleDto) {
     try {
@@ -22,6 +26,9 @@ export class SaleService {
       sale.user = await this.userRepository.findOneBy({
         id: createSaleDto.user_id
       });
+      sale.customer = await this.customerRepository.findOneBy({
+        id: createSaleDto.customer_id
+      })
       if(!sale){
         throw new NotFoundException(`Error Get user by id ${createSaleDto.user_id}`)
       }

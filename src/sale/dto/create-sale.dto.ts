@@ -16,6 +16,8 @@ export class CreateSaleDto {
     @IsNumber()
     user_id: number;
     
+    @IsNumber()
+    customer_id: number;
 }
 
 
