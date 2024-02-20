@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException, NotFoundException } from '@ne
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Drug } from 'src/drug/entities/drug.entity';
 import { Presentation } from 'src/presentation/entities/presentation.entity';
@@ -109,15 +109,32 @@ export class ProductService {
   
   async searchByQuery({ query }: { query: string }) {
     try {
-      const queryBuilder = await this.productRepository.createQueryBuilder('product')
-      .where('product.name ILIKE :query', { query: `%${query}%` })
-      .orWhere('product.description ILIKE :query', { query: `%${query}%` })
-      .orWhere('brand.name ILIKE :query', { query: `%${query}%` });
+      //const products = await this.productRepository.createQueryBuilder('product')
+      //.leftJoinAndSelect('product.brand', 'brand') // Utiliza leftJoinAndSelect para incluir la entidad Brand
+      //.where('product.name ILIKE :query', { query: `%${query}%` })
+      //.orWhere('product.description ILIKE :query', { query: `%${query}%` })
+      //.orWhere('brand.name ILIKE :query', { query: `%${query}%` })
+      //.getMany();
 
+      const products = await this.productRepository.find({
+        where: [
+          { name: Like(`%${query}%`) },
+          { description: Like(`%${query}%`) },
+          { brand: { name: Like(`%${query}%`) }}
+        ],
+        
+        
+        relations: { 
+          drug: true,
+          presentation: true,
+          brand: true,
+          category: true,
+          lots: true,
+          suggested_price: true
+        }
+      })
 
-
-    const products = await queryBuilder.getMany();
-    return products;
+      return products
     } catch (error) {
       console.log(error)
       throw new InternalServerErrorException(error);
