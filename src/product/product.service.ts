@@ -109,31 +109,23 @@ export class ProductService {
   
   async searchByQuery({ query }: { query: string }) {
     try {
-      //const products = await this.productRepository.createQueryBuilder('product')
-      //.leftJoinAndSelect('product.brand', 'brand') // Utiliza leftJoinAndSelect para incluir la entidad Brand
-      //.where('product.name ILIKE :query', { query: `%${query}%` })
-      //.orWhere('product.description ILIKE :query', { query: `%${query}%` })
-      //.orWhere('brand.name ILIKE :query', { query: `%${query}%` })
-      //.getMany();
-
       const products = await this.productRepository.find({
-        where: [
-          { name: Like(`%${query}%`) },
-          { description: Like(`%${query}%`) },
-          { brand: { name: Like(`%${query}%`) }}
-        ],
-        
-        
         relations: { 
           drug: true,
           presentation: true,
           brand: true,
           category: true,
-          lots: true,
-          suggested_price: true
-        }
+        },
+        where: [
+          { name: Like(`%${query}%`) },
+          { description: Like(`%${query}%`) },
+          { brand: { name: Like(`%${query}%`) } },
+          { category: { name: Like(`%${query}%`) } },
+          { drug: { name: Like(`%${query}%`) } },
+          { drug: { therapeutic_function: Like(`%${query}%`) } },
+          { presentation: { name: Like(`%${query}%`) } },
+        ],
       })
-
       return products
     } catch (error) {
       console.log(error)
