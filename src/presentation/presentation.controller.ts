@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Query } from '@nestjs/common';
 import { PresentationService } from './presentation.service';
 import { CreatePresentationDto } from './dto/create-presentation.dto';
 import { UpdatePresentationDto } from './dto/update-presentation.dto';
@@ -17,6 +17,11 @@ export class PresentationController {
   @Get()
   findAll() {
     return this.presentationService.findAll();
+  }
+
+  @Get('search')
+  searchByQuery(@Query('query') query: string) {
+    return this.presentationService.searchByQuery({query});
   }
 
   @Get(':id')

@@ -125,6 +125,30 @@ export class ProductService {
           { drug: { therapeutic_function: Like(`%${query}%`) } },
           { presentation: { name: Like(`%${query}%`) } },
         ],
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          brand: {
+            id: true,
+            name: true,
+          },
+          category: {
+            id: true,
+            name: true
+          },
+          drug: {
+            id: true,
+            name: true,
+            therapeutic_function: true,
+            concentration: true
+          },
+          presentation: {
+            id: true,
+            name: true,
+            quantity: true
+          }
+        }
       })
       return products
     } catch (error) {

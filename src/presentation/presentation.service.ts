@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException, NotFoundException } from '@ne
 import { CreatePresentationDto } from './dto/create-presentation.dto';
 import { UpdatePresentationDto } from './dto/update-presentation.dto';
 import { Presentation } from './entities/presentation.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
@@ -29,6 +29,57 @@ export class PresentationService {
   async findAll() {
     try {
       const presentations = await this.presentationRepository.find();
+      return presentations;
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException('Error Get all presentation')
+    }
+  }
+
+  async searchByQuery({ query }: { query: string }) {
+    try {
+      const presentations = await this.presentationRepository.find(
+        {
+          relations: {
+            products: {
+              brand: true,
+              category: true,
+              drug: true
+            }
+          },
+          where:[
+            { name: Like(`%${query}%`) },
+            { products: { name: Like(`%${query}%`) } },
+            { products: { description: Like(`%${query}%`) } },
+            { products: { brand: { name: Like(`%${query}%`) } } },
+            { products: { category: { name: Like(`%${query}%`) } } },
+            { products: { drug: { name: Like(`%${query}%`) } } },
+            { products: { drug: { therapeutic_function: Like(`%${query}%`) } } },
+          ],
+          select:{
+            id: true,
+            name: true,
+            products: {
+              id: true,
+              name: true,
+              description: true,
+              brand: {
+                id: true,
+                name: true
+              },
+              category: {
+                id: true,
+                name: true
+              },
+              drug: {
+                id: true,
+                name: true,
+                therapeutic_function: true
+              }
+            }
+          }
+        }
+      );
       return presentations;
     } catch (error) {
       console.log(error)
