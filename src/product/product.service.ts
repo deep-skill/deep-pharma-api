@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException, NotFoundException } from '@ne
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Drug } from 'src/drug/entities/drug.entity';
 import { Presentation } from 'src/presentation/entities/presentation.entity';
@@ -104,9 +104,58 @@ export class ProductService {
     } catch (error) {
       console.log(error)
       throw new InternalServerErrorException(error);
-    }
-    
+    } 
   }
+  
+  async searchByQuery({ query }: { query: string }) {
+    try {
+      const products = await this.productRepository.find({
+        relations: { 
+          drug: true,
+          presentation: true,
+          brand: true,
+          category: true,
+        },
+        where: [
+          { name: Like(`%${query}%`) },
+          { description: Like(`%${query}%`) },
+          { brand: { name: Like(`%${query}%`) } },
+          { category: { name: Like(`%${query}%`) } },
+          { drug: { name: Like(`%${query}%`) } },
+          { drug: { therapeutic_function: Like(`%${query}%`) } },
+          { presentation: { name: Like(`%${query}%`) } },
+        ],
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          brand: {
+            id: true,
+            name: true,
+          },
+          category: {
+            id: true,
+            name: true
+          },
+          drug: {
+            id: true,
+            name: true,
+            therapeutic_function: true,
+            concentration: true
+          },
+          presentation: {
+            id: true,
+            name: true,
+            quantity: true
+          }
+        }
+      })
+      return products
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException(error);
+    } 
+    } 
   
 
   async findOne(id: number) {
