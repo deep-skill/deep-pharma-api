@@ -12,6 +12,9 @@ export class Product extends ClassGlobal {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
+    @Column('int')
+    barcode: number
+
     @Column('text')
     name: string;
 

@@ -62,7 +62,7 @@ export class ProductService {
       })
 
       if(!brand || !category){
-        throw new NotFoundException("Error creating Product. None of these entities were found, brand and type.")
+        throw new NotFoundException(`Error creating Product. None of these entities were found, brand ${createProductDto.brand_id} and category ${createProductDto.category_id}.`)
       }
       
       product.brand = brand

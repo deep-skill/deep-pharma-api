@@ -44,7 +44,8 @@ export class PresentationService {
             products: {
               brand: true,
               category: true,
-              drug: true
+              drug: true,
+              lots: true
             }
           },
           where:[
@@ -75,6 +76,10 @@ export class PresentationService {
                 id: true,
                 name: true,
                 therapeutic_function: true
+              },
+              lots: {
+                id: true,
+                updated_stock: true
               }
             }
           }
