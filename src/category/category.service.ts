@@ -33,6 +33,23 @@ export class CategoryService {
     }
   }
 
+  async getBySelectProduct() {
+    try {
+      const categorys = await this.categoryRepository.find(
+        {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      );
+      return categorys;
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException(error)
+    }
+  }
+
   async findOne(id: number) {
     try {
       const category = await this.categoryRepository.findOne({ where: { id } });
