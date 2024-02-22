@@ -36,6 +36,23 @@ export class PresentationService {
     }
   }
 
+  async getBySelectProduct() {
+    try {
+      const presentations = await this.presentationRepository.find(
+        {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      );
+      return presentations;
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException(error)
+    }
+  }
+
   async searchByQuery({ query }: { query: string }) {
     try {
       const presentations = await this.presentationRepository.find(
