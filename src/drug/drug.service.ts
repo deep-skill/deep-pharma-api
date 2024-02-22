@@ -37,6 +37,23 @@ export class DrugService {
     }
   }
 
+  async getBySelectProduct() {
+    try {
+      const drugs = await this.drugRepository.find(
+        {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      );
+      return drugs;
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException(error)
+    }
+  }
+
   async findOne(id: number) {
     try {
       const drug = await this.drugRepository.findOne({ where: { id } });

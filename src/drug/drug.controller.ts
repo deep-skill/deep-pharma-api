@@ -17,6 +17,11 @@ export class DrugController {
     return this.drugService.findAll();
   }
 
+  @Get('/select-create-product')
+  getBySelectProduct() {
+    return this.drugService.getBySelectProduct();
+  }
+
   @Get(':id')
   findOne(@Param('id' , ParseIntPipe) id: number) {
     return this.drugService.findOne(id);
