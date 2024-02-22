@@ -25,8 +25,8 @@ export class PresentationController {
   }
 
   @Get('/select-create-product')
-  getBySelectProduct() {
-    return this.presentationService.getBySelectProduct();
+  getBySelectProduct(@Query('query') query: string) {
+    return this.presentationService.getBySelectProduct(query);
   }
 
   @Get(':id')

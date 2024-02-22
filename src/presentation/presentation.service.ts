@@ -36,10 +36,13 @@ export class PresentationService {
     }
   }
 
-  async getBySelectProduct() {
+  async getBySelectProduct(query: string) {
     try {
       const presentations = await this.presentationRepository.find(
         {
+          where: {
+            name: Like(`%${query}%`)
+          },
           select: {
             id: true,
             name: true
