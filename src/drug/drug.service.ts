@@ -41,12 +41,15 @@ export class DrugService {
     try {
       const drugs = await this.drugRepository.find(
         {
-          where: {
-            name: Like(`%${query}%`)
-          },
+          where: [
+            { name: Like(`%${query}%`) },
+            { therapeutic_function: Like(`%${query}%`) },
+            { concentration: Like(`%${query}%`) }
+        ],
           select: {
             id: true,
-            name: true
+            name: true,
+            concentration: true
           }
         }
       );
