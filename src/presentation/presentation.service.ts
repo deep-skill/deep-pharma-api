@@ -22,8 +22,6 @@ export class PresentationService {
       console.log(error)
       throw new InternalServerErrorException(error)
     }
-
-
   }
 
   async findAll() {

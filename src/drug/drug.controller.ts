@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UsePipes, ValidationPipe, Query } from '@nestjs/common';
 import { DrugService } from './drug.service';
 import { CreateDrugDto } from './dto/create-drug.dto';
 import { UpdateDrugDto } from './dto/update-drug.dto';
@@ -18,8 +18,8 @@ export class DrugController {
   }
 
   @Get('/select-create-product')
-  getBySelectProduct() {
-    return this.drugService.getBySelectProduct();
+  getBySelectProduct(@Query('query') query: string) {
+    return this.drugService.getBySelectProduct(query);
   }
 
   @Get(':id')
