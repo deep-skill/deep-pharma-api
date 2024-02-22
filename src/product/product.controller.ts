@@ -22,6 +22,11 @@ export class ProductController {
     return this.productService.searchByQuery(query);
   }
 
+  @Get('codebar')
+  checkCodebar(@Query() query) {
+    return this.productService.checkCodebar(query);
+  }
+
   @Get(':id')
   findOne(@Param('id',ParseIntPipe) id: number) {
     return this.productService.findOne(id);

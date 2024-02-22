@@ -178,7 +178,21 @@ export class ProductService {
       console.log(error)
       throw new InternalServerErrorException(error);
     }
-   
+  }
+
+  async checkCodebar({ query }: { query: number }) {
+    try {
+      const product = await this.productRepository.findOne({
+        where: { barcode: query }
+      });
+      if (!product) {
+        return true
+      }
+      return false
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException(error);
+    }
   }
 
   async update(id: number, updateProductDto: UpdateProductDto) {
