@@ -34,6 +34,13 @@ export class ProductService {
   ) {}
   async create(createProductDto: CreateProductDto) {
     try {
+      const bardodeCheck = await this.productRepository.findOne({
+        where: { barcode: createProductDto.barcode }
+      });
+      if (bardodeCheck) {
+        throw new NotFoundException(`Error creating Product. barcode ${createProductDto.barcode} already exists.`)
+      }
+      
       const product = await this.productRepository.create(createProductDto);
       
       
