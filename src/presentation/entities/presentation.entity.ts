@@ -7,9 +7,7 @@ export class Presentation extends ClassGlobal {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column('text',{
-        nullable: true,
-    })
+    @Column('text')
     name: string;
 
     @Column('int')
