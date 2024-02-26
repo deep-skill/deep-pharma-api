@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException, NotFoundException } from '@ne
 import { CreatePresentationDto } from './dto/create-presentation.dto';
 import { UpdatePresentationDto } from './dto/update-presentation.dto';
 import { Presentation } from './entities/presentation.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
@@ -56,7 +56,7 @@ export class PresentationService {
 
   async searchByQuery({ query }: { query: string }) {
     try {
-
+      console.log(query)
       const createQueryBuilder = this.presentationRepository.createQueryBuilder('presentation')
 
       const presentations = await createQueryBuilder
@@ -71,6 +71,7 @@ export class PresentationService {
         .select(['presentation.id', 'presentation.name', 'product.id', 'product.name', 'product.description', 'brand.id', 'brand.name', 'category.id', 'category.name', 'drug.id', 'drug.name', 'drug.therapeutic_function', 'drug.concentration', 'lot.id', 'lot.updated_stock', 'lot.lot_state', 'suggested_price.id', 'suggested_price.price'])
         .getMany();
 
+      console.log(presentations)
       return presentations;
     } catch (error) {
       console.log(error);
