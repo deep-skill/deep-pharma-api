@@ -2,21 +2,21 @@ import { Injectable, InternalServerErrorException, NotFoundException } from '@ne
 import { CreatePresentationDto } from './dto/create-presentation.dto';
 import { UpdatePresentationDto } from './dto/update-presentation.dto';
 import { Presentation } from './entities/presentation.entity';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class PresentationService {
-  
+
   constructor(
-    @InjectRepository( Presentation )
+    @InjectRepository(Presentation)
     private readonly presentationRepository: Repository<Presentation>
-  ) {}
+  ) { }
   async create(createPresentationDto: CreatePresentationDto) {
     try {
-      const presentation = this.presentationRepository.create( createPresentationDto );
+      const presentation = this.presentationRepository.create(createPresentationDto);
 
-      await this.presentationRepository.save( presentation );
+      await this.presentationRepository.save(presentation);
       return presentation;
     } catch (error) {
       console.log(error)
@@ -56,57 +56,25 @@ export class PresentationService {
 
   async searchByQuery({ query }: { query: string }) {
     try {
-      const presentations = await this.presentationRepository.find(
-        {
-          relations: {
-            products: {
-              brand: true,
-              category: true,
-              drug: true,
-              lots: true
-            }
-          },
-          where:[
-            { name: Like(`%${query}%`) },
-            { products: { name: Like(`%${query}%`) } },
-            { products: { description: Like(`%${query}%`) } },
-            { products: { brand: { name: Like(`%${query}%`) } } },
-            { products: { category: { name: Like(`%${query}%`) } } },
-            { products: { drug: { name: Like(`%${query}%`) } } },
-            { products: { drug: { therapeutic_function: Like(`%${query}%`) } } },
-          ],
-          select:{
-            id: true,
-            name: true,
-            products: {
-              id: true,
-              name: true,
-              description: true,
-              brand: {
-                id: true,
-                name: true
-              },
-              category: {
-                id: true,
-                name: true
-              },
-              drug: {
-                id: true,
-                name: true,
-                therapeutic_function: true
-              },
-              lots: {
-                id: true,
-                updated_stock: true
-              }
-            }
-          }
-        }
-      );
+
+      const createQueryBuilder = this.presentationRepository.createQueryBuilder('presentation')
+
+      const presentations = await createQueryBuilder
+        .leftJoinAndSelect('presentation.products', 'product')
+        .leftJoinAndSelect('product.brand', 'brand')
+        .leftJoinAndSelect('product.category', 'category')
+        .leftJoinAndSelect('product.drug', 'drug')
+        .leftJoinAndSelect('product.lots', 'lot')
+        .leftJoinAndSelect('product.suggested_price', 'suggested_price')
+        .where('(lot.lot_state = :lot_state OR lot.lot_state IS NULL)', { lot_state: true })
+        .andWhere('(product.name LIKE :query OR product.description LIKE :query OR brand.name LIKE :query OR category.name LIKE :query OR drug.name LIKE :query OR drug.therapeutic_function LIKE :query)', { query: `%${query}%` })
+        .select(['presentation.id', 'presentation.name', 'product.id', 'product.name', 'product.description', 'brand.id', 'brand.name', 'category.id', 'category.name', 'drug.id', 'drug.name', 'drug.therapeutic_function', 'drug.concentration', 'lot.id', 'lot.updated_stock', 'lot.lot_state', 'suggested_price.id', 'suggested_price.price'])
+        .getMany();
+
       return presentations;
     } catch (error) {
-      console.log(error)
-      throw new InternalServerErrorException('Error Get all presentation')
+      console.log(error);
+      throw new InternalServerErrorException('Error fetching data on Home Page');
     }
   }
 
