@@ -48,6 +48,7 @@ export class PresentationService {
         .leftJoinAndSelect('product.lots', 'lot')
         .leftJoinAndSelect('product.suggested_price', 'suggested_price')
         .where('(lot.lot_state = :lot_state OR lot.lot_state IS NULL)', { lot_state: true })
+        .andWhere('(lot.id IS NOT NULL)')
         .andWhere('(product.name LIKE :query OR product.description LIKE :query OR brand.name LIKE :query OR category.name LIKE :query OR drug.name LIKE :query OR drug.therapeutic_function LIKE :query)', { query: `%${query}%` })
         .select(['presentation.id', 'presentation.name', 'product.id', 'product.name', 'product.description', 'brand.id', 'brand.name', 'category.id', 'category.name', 'drug.id', 'drug.name', 'drug.therapeutic_function', 'drug.concentration', 'lot.id', 'lot.updated_stock', 'lot.lot_state', 'suggested_price.id', 'suggested_price.price'])
         .getMany();
