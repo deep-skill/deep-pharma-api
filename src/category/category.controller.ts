@@ -17,6 +17,11 @@ export class CategoryController {
     return this.categoryService.findAll();
   }
 
+  @Get('/select-create-product')
+  getBySelectProduct() {
+    return this.categoryService.getBySelectProduct();
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.categoryService.findOne(id);

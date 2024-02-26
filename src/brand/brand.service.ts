@@ -34,6 +34,23 @@ export class BrandService {
     }
   }
 
+  async getBySelectProduct() {
+    try {
+      const categorys = await this.brandRepository.find(
+        {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      );
+      return categorys;
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException(error)
+    }
+  }
+
   async findOne(id: number) {
     try {
       const brand = await this.brandRepository.findOne({ where: { id } });

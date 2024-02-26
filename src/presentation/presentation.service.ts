@@ -22,8 +22,6 @@ export class PresentationService {
       console.log(error)
       throw new InternalServerErrorException(error)
     }
-
-
   }
 
   async findAll() {
@@ -36,8 +34,29 @@ export class PresentationService {
     }
   }
 
+  async getBySelectProduct(query: string) {
+    try {
+      const presentations = await this.presentationRepository.find(
+        {
+          where: {
+            name: Like(`%${query}%`)
+          },
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      );
+      return presentations;
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException(error)
+    }
+  }
+
   async searchByQuery({ query }: { query: string }) {
     try {
+
       const createQueryBuilder = this.presentationRepository.createQueryBuilder('presentation')
 
       const presentations = await createQueryBuilder

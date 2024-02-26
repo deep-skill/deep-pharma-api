@@ -4,6 +4,9 @@ export class CreateProductDto {
     @IsString()
     name: string
 
+    @IsNumber()
+    barcode: number
+
     @IsString()
     description: string
 

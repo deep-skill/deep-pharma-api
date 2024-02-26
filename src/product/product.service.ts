@@ -34,6 +34,13 @@ export class ProductService {
   ) {}
   async create(createProductDto: CreateProductDto) {
     try {
+      const bardodeCheck = await this.productRepository.findOne({
+        where: { barcode: createProductDto.barcode }
+      });
+      if (bardodeCheck) {
+        throw new NotFoundException(`Error creating Product. barcode ${createProductDto.barcode} already exists.`)
+      }
+      
       const product = await this.productRepository.create(createProductDto);
       
       
@@ -62,7 +69,7 @@ export class ProductService {
       })
 
       if(!brand || !category){
-        throw new NotFoundException("Error creating Product. None of these entities were found, brand and type.")
+        throw new NotFoundException(`Error creating Product. None of these entities were found, brand ${createProductDto.brand_id} and category ${createProductDto.category_id}.`)
       }
       
       product.brand = brand
@@ -178,7 +185,21 @@ export class ProductService {
       console.log(error)
       throw new InternalServerErrorException(error);
     }
-   
+  }
+
+  async checkCodebar({ query }: { query: number }) {
+    try {
+      const product = await this.productRepository.findOne({
+        where: { barcode: query }
+      });
+      if (!product) {
+        return true
+      }
+      return false
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException(error);
+    }
   }
 
   async update(id: number, updateProductDto: UpdateProductDto) {

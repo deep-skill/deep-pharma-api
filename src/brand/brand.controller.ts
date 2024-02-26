@@ -24,6 +24,11 @@ export class BrandController {
     return this.brandService.findAll();
   }
 
+  @Get('/select-create-product')
+  getBySelectProduct() {
+    return this.brandService.getBySelectProduct();
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.brandService.findOne(id);

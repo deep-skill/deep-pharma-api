@@ -24,6 +24,11 @@ export class PresentationController {
     return this.presentationService.searchByQuery({query});
   }
 
+  @Get('/select-create-product')
+  getBySelectProduct(@Query('query') query: string) {
+    return this.presentationService.getBySelectProduct(query);
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.presentationService.findOne(+id);
